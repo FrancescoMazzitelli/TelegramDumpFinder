@@ -1,10 +1,8 @@
-import shutil
-
 from telethon import TelegramClient
 from telethon.errors import SessionPasswordNeededError
 from pathlib import Path
 from tqdm import tqdm
-import json, datetime, os
+import json, datetime, os, shutil
 
 
 def date_format(date):
@@ -45,7 +43,7 @@ class ToScrape:
 
     async def message_reader(group_id):
         """
-            Questo metodo ritorna la lista di tutta la cronologia di messaggi inviati
+            Metodo che ritorna la lista di tutta la cronologia di messaggi inviati
             sul gruppo, il limite è stato impostato a 1000 messaggi ma è modificabile
 
             :param group_id: Identificatore del gruppo espresso come @nome_gruppo
@@ -114,7 +112,6 @@ class ToScrape:
                             "sender":msg.sender.username,
                             "text": msg.text,
                             "date": msg.date.strftime("%Y-%m-%d %H:%M:%S")}
-                    #Scrivo l'oggetto json sul file dump.json
                     dirToCheck = Path("dump_dir")
                     if not dirToCheck.exists():
                         os.mkdir(os.path.join('dump_dir'))
