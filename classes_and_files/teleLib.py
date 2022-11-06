@@ -21,7 +21,7 @@ class ToScrape:
 
     global client, settings, api_id, api_hash, username, phone
 
-    fileJ = open('settings.json')
+    fileJ = open('classes_and_files/settings.json')
     settings = json.load(fileJ)
     api_id = settings['api_id']
     api_hash = settings['api_hash']
@@ -89,10 +89,10 @@ class ToScrape:
             for msg in tqdm(messages):
                 file = msg.file
                 if not file is None and not file.name is None and filename in file.name:
-                    dirToCheck = Path("temp_dir")
+                    dirToCheck = Path("classes_and_files/temp_dir")
                     if not dirToCheck.exists():
-                        os.mkdir(os.path.join('temp_dir'))
-                    await msg.download_media(file=os.path.join('temp_dir/'+file.name))
+                        os.mkdir(os.path.join('classes_and_files/temp_dir'))
+                    await msg.download_media(file=os.path.join('classes_and_files/temp_dir/'+file.name))
 
     async def find_dump(group_id, filename):
         """
@@ -103,20 +103,22 @@ class ToScrape:
         :return: File json contenente i metadati del messaggio
         """
         async with TelegramClient(username, api_id, api_hash) as client:
-            messages = await client.get_messages(group_id, limit=1000)
+            messages = await client.get_messages(group_id, limit=10000)
             for msg in messages:
                 file = msg.file
-                if not file is None and not file.name is None and filename in file.name:
-                    data = {"group": group_id,
-                            "sender id": msg.sender_id,
-                            "sender":msg.sender.username,
-                            "text": msg.text,
-                            "date": msg.date.strftime("%Y-%m-%d %H:%M:%S")}
-                    dirToCheck = Path("dump_dir")
-                    if not dirToCheck.exists():
-                        os.mkdir(os.path.join('dump_dir'))
-                    with open("dump_dir/file_location.json", "w+") as outfile:
-                        json.dump(data, outfile)
+                if not file is None and not file.name is None:
+                    if filename in file.name:
+                        data = {"group": group_id,
+                                "sender id": msg.sender_id,
+                                "sender":msg.sender.username,
+                                "text": msg.text,
+                                "date": msg.date.strftime("%Y-%m-%d %H:%M:%S")}
+                        dirToCheck = Path("classes_and_files/dump_dir")
+                        if not dirToCheck.exists():
+                            os.mkdir(os.path.join('classes_and_files/dump_dir'))
+                            with open("classes_and_files/dump_dir/file_location.json", "w+") as outfile:
+                                json.dump(data, outfile)
+                                return
 
     def clear_cache(dir_name):
         """

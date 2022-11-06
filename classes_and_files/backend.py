@@ -1,13 +1,14 @@
 import paho.mqtt.client as mqtt
 from pathlib import Path
-import teleLib, asyncio, os, json, time, threading
+import asyncio, os, json, time, threading
+from classes_and_files.teleLib import ToScrape
 
-fileJ = open('settings.json')
+fileJ = open('classes_and_files/settings.json')
 settings = json.load(fileJ)
 broker_address = settings['broker_address']
 
 client = mqtt.Client(client_id="telegram")
-test = teleLib.ToScrape
+telegram_lib = ToScrape
 
 
 def on_message(client, userdata, message):
@@ -23,19 +24,40 @@ def on_message(client, userdata, message):
     :return: Creazione di un file request.json
     """
     request = message.payload.decode("utf-8")
-    dirToCheck = Path("request_dir")
+    print("Debug message: messaggio ricevuto")
+    dirToCheck = Path("classes_and_files/request_dir")
     if not dirToCheck.exists():
-        os.mkdir(os.path.join('request_dir'))
-    request_json = open("request_dir/request.json", "w")
+        os.mkdir(os.path.join('classes_and_files/request_dir'))
+    request_json = open("classes_and_files/request_dir/request.json", "w")
     request_json.write(request)
 
 
-class TelegramDumpFinder:
+class TelegramDumpFinder():
     """
     Framework principale
     """
 
-    def find_local_data(path):
+    def find_local_data(pathTo):
+        """
+        Metodo che ricerca e crea oggetti json con riferimento a
+        files sul filesystem
+
+        :param pathTo: Percorso del file desiderato
+        :return: Oggetto json
+        """
+        with open(pathTo, 'r') as file:
+            json_read = json.load(file)
+            return json_read
+
+    def find_local_data_conversion(pathTo):
+        """
+        Metodo che ricerca e crea oggetti json con riferimento a
+        files sul filesystem e li converte in stringhe per facilitarne
+        l'inoltro sul broker MQTT
+
+        :param pathTo: Percorso del file desiderato
+        :return: Oggetto json convertito in stringa
+        """
         with open(pathTo, 'r') as file:
             json_read = json.load(file)
             json_object = json.dumps(json_read)
@@ -43,19 +65,41 @@ class TelegramDumpFinder:
 
     def send_data(self):
         client.connect(broker_address)
-        pathTo = "dump_dir/file_location.json"
-        client.publish(topic="Dump", payload=find_local_data(pathTo))
-        test.clear_cache("dump_dir")
+        pathTo = "classes_and_files/dump_dir/file_location.json"
+        client.publish(topic="Dump", payload=TelegramDumpFinder.find_local_data_conversion(pathTo))
+        telegram_lib.clear_cache("classes_and_files/dump_dir")
         client.disconnect()
 
     def __listening(self):
         """
         Metodo privato che contiene il loop infinito di listening
+        per la ricezione continua di messaggi
         """
         client.connect(broker_address)
         client.subscribe(topic="Request")
         client.on_message = on_message
         client.loop_forever()
+
+    async def find_dump(group_id):
+        """
+        Metodo che acquisisce il nome del dump dal file json, pulisce
+        la cache e ricerca il file nel gruppo
+
+        :param group_id: Identificativo del gruppo all'interno del quale effettuare la ricerca
+        :return:
+        """
+        while True:
+            dirToCheck = Path("classes_and_files/request_dir")
+            pathTo = "classes_and_files/request_dir/request.json"
+            if dirToCheck.exists() and os.path.exists(pathTo):
+                data = TelegramDumpFinder.find_local_data(pathTo)
+                tofind = data.get("dump_name")
+                telegram_lib.clear_cache("classes_and_files/request_dir")
+                await telegram_lib.find_dump(group_id, tofind)
+
+                dirToCheck = Path("classes_and_files/dump_dir")
+                if dirToCheck.exists():
+                    print("Dump trovato")
 
     def listening_thread(self):
         """
@@ -63,20 +107,28 @@ class TelegramDumpFinder:
         listening continuo dei messaggi che vengono pubblicati
         sul broker
         """
-        thread = threading.Thread(target=test.__listening, args=(1,))
-        thread.start()
+        listening_thread = threading.Thread(target=TelegramDumpFinder.__listening, args=(1,))
+        listening_thread.start()
 
-    def find_dump(self):
+    async def finding_thread(group_id):
         """
+        Metodo che conesente di instanziare un thread adibito
+        alla ricerca delle informazioni contenute nel file ricevuto
+        dal broker MQTT sui gruppi telegram
 
-        :return:
+        :param group_id: Gruppi telegram su cui cercare
         """
+        finding_thread = threading.Thread(target= await TelegramDumpFinder.find_dump(group_id), args=(1,))
+        finding_thread.start()
+
+
+#+----------------------------------------------------------------------------------------------------------------------TEST
+
 
 if __name__ == '__main__':
-    # asyncio.run(main_test())
+    #asyncio.run(main_test())
     #send_data("test.mosquitto.org")
-    test = TelegramDumpFinder
-    test.listening_thread(test)
+    asyncio.run(backend_test())
 
 async def teleLib_test():
     print("Hello")
@@ -87,3 +139,10 @@ async def teleLib_test():
     #await test.download_file('@salvatorebevilacqua', 'ToDo_list')
     #await test.find_dump('@salvatorebevilacqua', 'ToDo_list')
     #test.clear_cache('temp_dir')
+
+async def backend_test():
+    test = TelegramDumpFinder
+    test.listening_thread(test)
+    dirToCheck = Path("classes_and_files/request_dir")
+    if dirToCheck.exists():
+        await test.find_dump("@salvatorebevilacqua")

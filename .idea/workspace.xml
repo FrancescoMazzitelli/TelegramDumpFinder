@@ -3,10 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="f5249cd7-a0ea-4ca4-ab22-2dbb2e9c92a1" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes_and_files/Francesco.session" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/classes_and_files/backend.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes_and_files/backend.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes_and_files/dump_dir/file_location.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes_and_files/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/classes_and_files/settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes_and_files/request_dir/request.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/classes_and_files/teleLib.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes_and_files/teleLib.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes_and_files/temp_dir/ToDo_list.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <list id="d54d3c10-0602-4170-9644-bc661a5cf8e0" name="Undo &quot;First project push&quot;" comment="" />
@@ -42,7 +43,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
 }</component>
-  <component name="RunManager" selected="Python.backend">
+  <component name="RunManager" selected="Python.main">
     <configuration name="backend " type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="DumpDownloaderTelegram" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -135,8 +136,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.backend" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.backend" />
         <item itemvalue="Python.connection_MQTT" />
         <item itemvalue="Python.backend " />
       </list>
