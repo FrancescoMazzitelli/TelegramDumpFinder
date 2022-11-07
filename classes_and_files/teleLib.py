@@ -110,7 +110,7 @@ class ToScrape:
                     if filename in file.name:
                         data = {"group": group_id,
                                 "sender id": msg.sender_id,
-                                "sender":msg.sender.username,
+                                "sender": msg.sender.username,
                                 "text": msg.text,
                                 "date": msg.date.strftime("%Y-%m-%d %H:%M:%S")}
                         dirToCheck = Path("classes_and_files/dump_dir")
@@ -128,4 +128,5 @@ class ToScrape:
         :param dir_name: Nome della directory da eliminare
         :return: Eliminazione della directory contenente i file temporanei scaricati
         """
-        shutil.rmtree(dir_name)
+        if os.path.exists(dir_name):
+            shutil.rmtree(dir_name)

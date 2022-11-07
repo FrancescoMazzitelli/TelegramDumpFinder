@@ -3,13 +3,13 @@ from pathlib import Path
 from classes_and_files.teleLib import ToScrape
 from classes_and_files.backend import TelegramDumpFinder
 
-test = TelegramDumpFinder
+app = TelegramDumpFinder
 
-async def backend_test():
-    test.listening_thread(test)
-    await test.finding_thread("@salvatorebevilacqua")
+async def run():
+    while True:
+        app.listening_thread(app)
+        await app.finding_thread("@salvatorebevilacqua")
+        await app.sending_thread(app)
 
 if __name__ == '__main__':
-    #asyncio.run(main_test())
-    #send_data("test.mosquitto.org")
-    asyncio.run(backend_test())
+    asyncio.run(run())

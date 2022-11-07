@@ -8,8 +8,8 @@ settings = json.load(fileJ)
 broker_address = settings['broker_address']
 
 client = mqtt.Client(client_id="telegram")
+client.connect(broker_address)
 telegram_lib = ToScrape
-
 
 def on_message(client, userdata, message):
     """
@@ -34,7 +34,7 @@ def on_message(client, userdata, message):
 
 class TelegramDumpFinder():
     """
-    Framework principale
+    Framework di backend principale
     """
 
     def find_local_data(pathTo):
@@ -63,43 +63,51 @@ class TelegramDumpFinder():
             json_object = json.dumps(json_read)
             return json_object
 
-    def send_data(self):
-        client.connect(broker_address)
-        pathTo = "classes_and_files/dump_dir/file_location.json"
-        client.publish(topic="Dump", payload=TelegramDumpFinder.find_local_data_conversion(pathTo))
-        telegram_lib.clear_cache("classes_and_files/dump_dir")
-        client.disconnect()
+    async def send_data(self):
+        """
+        Metodo privato adibito al trasferimento del risultato della ricerca
+        sui gruppi telegram sul broker MQTT
 
-    def __listening(self):
+        :return:
+        """
+        #while True:
+        dirToCheck = Path("classes_and_files/dump_dir")
+        pathTo = "classes_and_files/dump_dir/file_location.json"
+        if dirToCheck.exists() and os.path.exists(pathTo):
+            client.publish(topic="Dump", payload=TelegramDumpFinder.find_local_data_conversion(pathTo))
+            print("Debug message: messaggio pubblicato sul broker")
+            telegram_lib.clear_cache("classes_and_files/dump_dir")
+
+
+    def listening(self):
         """
         Metodo privato che contiene il loop infinito di listening
         per la ricezione continua di messaggi
         """
-        client.connect(broker_address)
         client.subscribe(topic="Request")
         client.on_message = on_message
-        client.loop_forever()
+        client.loop(10)
 
     async def find_dump(group_id):
         """
-        Metodo che acquisisce il nome del dump dal file json, pulisce
+        Metodo privato che acquisisce il nome del dump dal file json, pulisce
         la cache e ricerca il file nel gruppo
 
         :param group_id: Identificativo del gruppo all'interno del quale effettuare la ricerca
         :return:
         """
-        while True:
-            dirToCheck = Path("classes_and_files/request_dir")
-            pathTo = "classes_and_files/request_dir/request.json"
-            if dirToCheck.exists() and os.path.exists(pathTo):
-                data = TelegramDumpFinder.find_local_data(pathTo)
-                tofind = data.get("dump_name")
-                telegram_lib.clear_cache("classes_and_files/request_dir")
-                await telegram_lib.find_dump(group_id, tofind)
+        #while True:
+        dirToCheck = Path("classes_and_files/request_dir")
+        pathTo = "classes_and_files/request_dir/request.json"
+        if dirToCheck.exists() and os.path.exists(pathTo):
+            data = TelegramDumpFinder.find_local_data(pathTo)
+            tofind = data.get("dump_name")
+            telegram_lib.clear_cache("classes_and_files/request_dir")
+            await telegram_lib.find_dump(group_id, tofind)
 
-                dirToCheck = Path("classes_and_files/dump_dir")
-                if dirToCheck.exists():
-                    print("Dump trovato")
+            dirToCheck = Path("classes_and_files/dump_dir")
+            if dirToCheck.exists():
+                print("Debug message: dump trovato")
 
     def listening_thread(self):
         """
@@ -107,7 +115,7 @@ class TelegramDumpFinder():
         listening continuo dei messaggi che vengono pubblicati
         sul broker
         """
-        listening_thread = threading.Thread(target=TelegramDumpFinder.__listening, args=(1,))
+        listening_thread = threading.Thread(target=TelegramDumpFinder.listening(TelegramDumpFinder), args=(1,))
         listening_thread.start()
 
     async def finding_thread(group_id):
@@ -120,6 +128,15 @@ class TelegramDumpFinder():
         """
         finding_thread = threading.Thread(target= await TelegramDumpFinder.find_dump(group_id), args=(1,))
         finding_thread.start()
+
+    async def sending_thread(self):
+        """
+        Metodo che consente di instanziare un thread adibito
+        all'inoltro delle informazioni ricercate su telegram
+        al broker MQTT, appena queste sono disponibili
+        """
+        sending_thread = threading.Thread(target= await TelegramDumpFinder.send_data(TelegramDumpFinder), args=(1,))
+        sending_thread.start()
 
 
 #+----------------------------------------------------------------------------------------------------------------------TEST
