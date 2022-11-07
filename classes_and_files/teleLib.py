@@ -1,13 +1,15 @@
 from telethon import TelegramClient
-from telethon.errors import SessionPasswordNeededError
 from pathlib import Path
 from tqdm import tqdm
-import json, datetime, os, shutil
+import json
+import datetime
+import os
+import shutil
 
 
 def date_format(date):
     """
-    :param message:
+    :param date:
     :return:
     """
     if type(date) is datetime:

@@ -1,9 +1,8 @@
-import asyncio, os, json, time, threading
-from pathlib import Path
-from classes_and_files.teleLib import ToScrape
+import asyncio
 from classes_and_files.backend import TelegramDumpFinder
 
-app = TelegramDumpFinder
+app = TelegramDumpFinder()
+
 
 async def run():
     while True:
