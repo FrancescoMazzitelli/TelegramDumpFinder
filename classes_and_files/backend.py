@@ -63,7 +63,7 @@ class TelegramDumpFinder():
             json_object = json.dumps(json_read)
             return json_object
 
-    async def send_data(self):
+    async def __send_data(self):
         """
         Metodo privato adibito al trasferimento del risultato della ricerca
         sui gruppi telegram sul broker MQTT
@@ -79,7 +79,7 @@ class TelegramDumpFinder():
             telegram_lib.clear_cache("classes_and_files/dump_dir")
 
 
-    def listening(self):
+    def __listening(self):
         """
         Metodo privato che contiene il loop infinito di listening
         per la ricezione continua di messaggi
@@ -88,7 +88,7 @@ class TelegramDumpFinder():
         client.on_message = on_message
         client.loop(10)
 
-    async def find_dump(group_id):
+    async def __find_dump(group_id):
         """
         Metodo privato che acquisisce il nome del dump dal file json, pulisce
         la cache e ricerca il file nel gruppo
@@ -115,7 +115,7 @@ class TelegramDumpFinder():
         listening continuo dei messaggi che vengono pubblicati
         sul broker
         """
-        listening_thread = threading.Thread(target=TelegramDumpFinder.listening(TelegramDumpFinder), args=(1,))
+        listening_thread = threading.Thread(target=TelegramDumpFinder.__listening(TelegramDumpFinder), args=(1,))
         listening_thread.start()
 
     async def finding_thread(group_id):
@@ -126,7 +126,7 @@ class TelegramDumpFinder():
 
         :param group_id: Gruppi telegram su cui cercare
         """
-        finding_thread = threading.Thread(target= await TelegramDumpFinder.find_dump(group_id), args=(1,))
+        finding_thread = threading.Thread(target= await TelegramDumpFinder.__find_dump(group_id), args=(1,))
         finding_thread.start()
 
     async def sending_thread(self):
@@ -135,7 +135,7 @@ class TelegramDumpFinder():
         all'inoltro delle informazioni ricercate su telegram
         al broker MQTT, appena queste sono disponibili
         """
-        sending_thread = threading.Thread(target= await TelegramDumpFinder.send_data(TelegramDumpFinder), args=(1,))
+        sending_thread = threading.Thread(target= await TelegramDumpFinder.__send_data(TelegramDumpFinder), args=(1,))
         sending_thread.start()
 
 
