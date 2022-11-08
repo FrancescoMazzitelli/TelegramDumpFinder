@@ -5,12 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7986653d-7950-4606-b19b-7cbfd254f15d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Francesco.session" beforeDir="false" afterPath="$PROJECT_DIR$/Francesco.session" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/classes_and_files/backend.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes_and_files/backend.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes_and_files/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes_and_files/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/classes_and_files/teleLib.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes_and_files/teleLib.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -28,6 +26,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/AppData/Local/Programs/Python/Python310/Lib/asyncio/base_events.py" root0="SKIP_INSPECTION" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />

@@ -1,34 +1,26 @@
 from telethon import TelegramClient
 from pathlib import Path
 from tqdm import tqdm
+from classes_and_files import settings
 import json
-import datetime
 import os
 import shutil
 
+global client, api_id, api_hash, username, phone
 
-def date_format(date):
-    """
-    :param date:
-    :return:
-    """
-    if type(date) is datetime:
-        return date.strftime("%Y-%m-%d %H:%M:%S")
 
 class ToScrape:
+
     """
     Framework Telegram per DarkWeb Monitor
     """
-
-    from classes_and_files import settings
-
-    global client, settings, api_id, api_hash, username, phone
 
     api_id = settings.init()['api_id']
     api_hash = settings.init()['api_hash']
     username = settings.init()['username']
     phone = settings.init()['phone']
 
+    @staticmethod
     async def init(self):
         """
         Metodo che inizializza il client Telegram effettuando l'operazione
@@ -55,7 +47,7 @@ class ToScrape:
         async with TelegramClient(username, api_id, api_hash) as client:
             messages = await client.get_messages(group_id, limit=1000)
             for message in messages:
-                if not message.sender_id is None and not message.sender.username is None:
+                if message.sender_id is not None and message.sender.username is not None:
                     data = {"group": group_id,
                             "sender id": message.sender_id,
                             "sender": message.sender.username,
@@ -89,7 +81,7 @@ class ToScrape:
             messages = await client.get_messages(group_id, limit=1000)
             for msg in tqdm(messages):
                 file = msg.file
-                if not file is None and not file.name is None and filename in file.name:
+                if file is not None and file.name is not None and filename in file.name:
                     dirToCheck = Path("classes_and_files/temp_dir")
                     if not dirToCheck.exists():
                         os.mkdir(os.path.join('classes_and_files/temp_dir'))
@@ -107,7 +99,7 @@ class ToScrape:
             messages = await client.get_messages(group_id, limit=10000)
             for msg in messages:
                 file = msg.file
-                if not file is None and not file.name is None:
+                if file is not None and file.name is not None:
                     if filename in file.name:
                         data = {"group": group_id,
                                 "sender id": msg.sender_id,

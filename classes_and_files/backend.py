@@ -23,13 +23,15 @@ def on_message(client, userdata, message):
     :param message: Messaggio ricevuto
     :return: Creazione di un file request.json
     """
-    request = message.payload.decode("utf-8")
+
     print("Debug message: messaggio ricevuto")
+    request = str(message.payload.decode("utf-8"))
     dirToCheck = Path("classes_and_files/request_dir")
     if not dirToCheck.exists():
         os.mkdir(os.path.join('classes_and_files/request_dir'))
-    request_json = open("classes_and_files/request_dir/request.json", "w")
-    request_json.write(request)
+    file = open("classes_and_files/request_dir/request.json", "w")
+    file.write(request)
+
 
 class TelegramDumpFinder:
     """
@@ -44,7 +46,7 @@ class TelegramDumpFinder:
         :param pathTo: Percorso del file desiderato
         :return: Oggetto json
         """
-        with open(pathTo, 'r') as file:
+        with open(pathTo, "r") as file:
             json_read = json.load(file)
             return json_read
 
@@ -108,7 +110,8 @@ class TelegramDumpFinder:
             dirToCheck = Path("classes_and_files/dump_dir")
             if dirToCheck.exists():
                 print("Debug message: dump trovato")
-            else: print("Debug message: dump non trovato")
+            else:
+                print("Debug message: dump non trovato")
 
     @staticmethod
     def listening_thread(self):
