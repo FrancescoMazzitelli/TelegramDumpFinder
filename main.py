@@ -3,7 +3,6 @@ from classes_and_files.backend import TelegramDumpFinder
 
 app = TelegramDumpFinder()
 
-
 async def run():
     while True:
         app.listening_thread(app)

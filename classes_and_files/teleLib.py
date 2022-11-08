@@ -15,20 +15,19 @@ def date_format(date):
     if type(date) is datetime:
         return date.strftime("%Y-%m-%d %H:%M:%S")
 
-
 class ToScrape:
     """
     Framework Telegram per DarkWeb Monitor
     """
 
+    from classes_and_files import settings
+
     global client, settings, api_id, api_hash, username, phone
 
-    fileJ = open('classes_and_files/settings.json')
-    settings = json.load(fileJ)
-    api_id = settings['api_id']
-    api_hash = settings['api_hash']
-    username = settings['username']
-    phone = settings['phone']
+    api_id = settings.init()['api_id']
+    api_hash = settings.init()['api_hash']
+    username = settings.init()['username']
+    phone = settings.init()['phone']
 
     async def init(self):
         """

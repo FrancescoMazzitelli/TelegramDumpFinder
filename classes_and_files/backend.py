@@ -3,14 +3,11 @@ from pathlib import Path
 import os
 import json
 import threading
+from classes_and_files import settings
 from classes_and_files.teleLib import ToScrape
 
-fileJ = open('classes_and_files/settings.json')
-settings = json.load(fileJ)
-broker_address = settings['broker_address']
-
 client = mqtt.Client(client_id="telegram")
-client.connect(broker_address)
+client.connect(settings.init()["broker_address"])
 telegram_lib = ToScrape
 
 
@@ -33,7 +30,6 @@ def on_message(client, userdata, message):
         os.mkdir(os.path.join('classes_and_files/request_dir'))
     request_json = open("classes_and_files/request_dir/request.json", "w")
     request_json.write(request)
-
 
 class TelegramDumpFinder:
     """
@@ -112,6 +108,7 @@ class TelegramDumpFinder:
             dirToCheck = Path("classes_and_files/dump_dir")
             if dirToCheck.exists():
                 print("Debug message: dump trovato")
+            else: print("Debug message: dump non trovato")
 
     @staticmethod
     def listening_thread(self):

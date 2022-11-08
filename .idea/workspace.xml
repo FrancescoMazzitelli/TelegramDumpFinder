@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="9340794b-4db1-4eb9-b211-bb26a61cdc61" name="Changes" comment="">
+    <list default="true" id="7986653d-7950-4606-b19b-7cbfd254f15d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/DumpDownloaderTelegram.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DumpDownloaderTelegram.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Francesco.session" beforeDir="false" afterPath="$PROJECT_DIR$/Francesco.session" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/classes_and_files/backend.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes_and_files/backend.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/classes_and_files/teleLib.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes_and_files/teleLib.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
@@ -15,13 +19,20 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectId" id="2HEkD1BbPTIWe2iuiBnQ6ulBCM6" />
+  <component name="ProjectId" id="2HFzOGmR9wePuEOz2MKhzNErNxY" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -30,17 +41,9 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/donat/OneDrive/Desktop/DumpDownloaderTelegram&quot;
   }
 }</component>
-  <component name="PyConsoleOptionsProvider">
-    <option name="myPythonConsoleState">
-      <console-settings module-name="DumpDownloaderTelegram" is-module-sdk="true">
-        <option name="myUseModuleSdk" value="true" />
-        <option name="myModuleName" value="DumpDownloaderTelegram" />
-      </console-settings>
-    </option>
-  </component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="DumpDownloaderTelegram" />
@@ -72,11 +75,11 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="9340794b-4db1-4eb9-b211-bb26a61cdc61" name="Changes" comment="" />
-      <created>1667857506174</created>
+      <changelist id="7986653d-7950-4606-b19b-7cbfd254f15d" name="Changes" comment="" />
+      <created>1667895587897</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1667857506174</updated>
+      <updated>1667895587897</updated>
     </task>
     <servers />
   </component>
