@@ -6,10 +6,11 @@ import threading
 from classes_and_files import settings
 from classes_and_files.teleLib import ToScrape
 
+
+request_to_find = dict()
 client = mqtt.Client(client_id="telegram")
 client.connect(settings.init()["broker_address"])
 telegram_lib = ToScrape
-
 
 def on_message(client, userdata, message):
     """
@@ -25,44 +26,20 @@ def on_message(client, userdata, message):
     """
 
     print("Debug message: messaggio ricevuto")
-    request = str(message.payload.decode("utf-8"))
-    dirToCheck = Path("classes_and_files/request_dir")
-    if not dirToCheck.exists():
-        os.mkdir(os.path.join('classes_and_files/request_dir'))
-    file = open("classes_and_files/request_dir/request.json", "w")
-    file.write(request)
-
+    request = json.loads(message.payload.decode("utf-8"))
+    global request_to_find
+    request_to_find = request
 
 class TelegramDumpFinder:
     """
     Framework di backend principale
     """
 
-    def find_local_data(pathTo):
-        """
-        Metodo che ricerca e crea oggetti json con riferimento a
-        files sul filesystem
-
-        :param pathTo: Percorso del file desiderato
-        :return: Oggetto json
-        """
-        with open(pathTo, "r") as file:
-            json_read = json.load(file)
-            return json_read
-
-    def find_local_data_conversion(pathTo):
-        """
-        Metodo che ricerca e crea oggetti json con riferimento a
-        files sul filesystem e li converte in stringhe per facilitarne
-        l'inoltro sul broker MQTT
-
-        :param pathTo: Percorso del file desiderato
-        :return: Oggetto json convertito in stringa
-        """
-        with open(pathTo, 'r') as file:
-            json_read = json.load(file)
-            json_object = json.dumps(json_read)
-            return json_object
+    def __get_dump_metadata(self):
+        toConvert = ToScrape.get_data_to_send(ToScrape)
+        if toConvert is not None and toConvert.get("sender id") is not None:
+            stringToSend = json.dumps(toConvert)
+            return stringToSend
 
     @staticmethod
     async def __send_data(self):
@@ -72,13 +49,10 @@ class TelegramDumpFinder:
 
         :return:
         """
-
-        dirToCheck = Path("classes_and_files/dump_dir")
-        pathTo = "classes_and_files/dump_dir/file_location.json"
-        if dirToCheck.exists() and os.path.exists(pathTo):
-            client.publish(topic="Dump", payload=TelegramDumpFinder.find_local_data_conversion(pathTo))
+        stringToSend = TelegramDumpFinder.__get_dump_metadata(TelegramDumpFinder)
+        if stringToSend is not None:
+            client.publish(topic="Dump", payload=stringToSend)
             print("Debug message: messaggio pubblicato sul broker")
-            telegram_lib.clear_cache("classes_and_files/dump_dir")
 
     @staticmethod
     def __listening(self):
@@ -90,7 +64,7 @@ class TelegramDumpFinder:
         client.on_message = on_message
         client.loop(10)
 
-    async def __find_dump(group_id):
+    async def __find_dump(self):
         """
         Metodo privato che acquisisce il nome del dump dal file json, pulisce
         la cache e ricerca il file nel gruppo
@@ -98,20 +72,13 @@ class TelegramDumpFinder:
         :param group_id: Identificativo del gruppo all'interno del quale effettuare la ricerca
         :return:
         """
+        global request_to_find
+        if request_to_find.get("dump_name") is not None:
+            tofind = request_to_find.get("dump_name")
+            await telegram_lib.find_dump(tofind)
 
-        dirToCheck = Path("classes_and_files/request_dir")
-        pathTo = "classes_and_files/request_dir/request.json"
-        if dirToCheck.exists() and os.path.exists(pathTo):
-            data = TelegramDumpFinder.find_local_data(pathTo)
-            tofind = data.get("dump_name")
-            telegram_lib.clear_cache("classes_and_files/request_dir")
-            await telegram_lib.find_dump(group_id, tofind)
-
-            dirToCheck = Path("classes_and_files/dump_dir")
-            if dirToCheck.exists():
-                print("Debug message: dump trovato")
-            else:
-                print("Debug message: dump non trovato")
+            request_to_find.clear()
+            print("Debug message: dump trovato")
 
     @staticmethod
     def listening_thread(self):
@@ -124,7 +91,7 @@ class TelegramDumpFinder:
         listening_thread.start()
 
     @staticmethod
-    async def finding_thread(group_id):
+    async def finding_thread(self):
         """
         Metodo che conesente di instanziare un thread adibito
         alla ricerca delle informazioni contenute nel file ricevuto
@@ -132,7 +99,7 @@ class TelegramDumpFinder:
 
         :param group_id: Gruppi telegram su cui cercare
         """
-        finding_thread = threading.Thread(target=await TelegramDumpFinder.__find_dump(group_id), args=(1,))
+        finding_thread = threading.Thread(target=await TelegramDumpFinder.__find_dump(TelegramDumpFinder), args=(1,))
         finding_thread.start()
 
     @staticmethod
