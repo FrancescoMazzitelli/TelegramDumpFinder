@@ -22,12 +22,14 @@ class ToScrape:
 
     @staticmethod
     async def init(self):
+
         """
         Metodo che inizializza il client Telegram effettuando l'operazione
         di login con l'autenticazione a due fattori
 
         :return: Inizializzazione della connessione
         """
+
         async with TelegramClient(username, api_id, api_hash) as client:
             await client.start()
 
@@ -35,6 +37,7 @@ class ToScrape:
             await client.disconnect()
 
     async def message_reader(group_id):
+
         """
             Metodo che ritorna la lista di tutta la cronologia di messaggi inviati
             sul gruppo, il limite è stato impostato a 1000 messaggi ma è modificabile
@@ -42,6 +45,7 @@ class ToScrape:
             :param group_id: Identificatore del gruppo espresso come @nome_gruppo
             :return: Lista dei messaggi inviati
         """
+
         mex_list = []
 
         async with TelegramClient(username, api_id, api_hash) as client:
@@ -59,35 +63,37 @@ class ToScrape:
             return mex_list
 
     def print_mex_list(mex_list):
+
         """
             Metodo che stampa a schermo il contenuto della lista statica
             adibita allo storage dei messaggi
 
             :param mex_list: Lista di messaggi da stampare a schermo
         """
+
         for i in range(0, len(mex_list)):
             print(mex_list[i])
 
-    async def download_file(group_id, filename):
+    async def download_file(filename):
+
         """
-        Metodo che consente di scaricare un file specifico da un gruppo
+        Metodo che consente di scaricare un file specifico
         e di salvarlo all'interno di una cartella temporanea
 
-        :param group_id: Identificatore del gruppo espresso come @nome_gruppo
-        :param filename: Nome del file da ricercare nel gruppo
+        :param filename: Nome del file da ricercare
         :return: Il file d'interesse viene scaricato nella cartella "temp"
         """
-        async with TelegramClient(username, api_id, api_hash) as client:
-            messages = await client.get_messages(group_id, limit=1000)
-            for msg in tqdm(messages):
-                file = msg.file
-                if file is not None and file.name is not None and filename in file.name:
-                    dirToCheck = Path("classes_and_files/temp_dir")
-                    if not dirToCheck.exists():
-                        os.mkdir(os.path.join('classes_and_files/temp_dir'))
-                    await msg.download_media(file=os.path.join('classes_and_files/temp_dir/'+file.name))
+
+        file = ToScrape.find_dump(filename)
+
+        if file is not None and file.name is not None and filename in file.name:
+            dirToCheck = Path("classes_and_files/temp_dir")
+            if not dirToCheck.exists():
+                os.mkdir(os.path.join('classes_and_files/temp_dir'))
+            await file.download_media(file=os.path.join('classes_and_files/temp_dir/'+file.name))
 
     async def find_dump(filename):
+
         """
         Metodo che recupera il riferimento ad un file dump specifico in un gruppo specifico
 
@@ -95,6 +101,7 @@ class ToScrape:
         :param filename: Nome del file da ricercare nel gruppo
         :return: File json contenente i metadati del messaggio
         """
+
         global return_data
         await client.connect()
         async for message in client.iter_messages(None, search=filename):
