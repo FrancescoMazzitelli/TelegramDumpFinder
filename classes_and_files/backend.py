@@ -8,7 +8,7 @@ from classes_and_files.teleLib import ToScrape
 request_to_find = dict()
 client = mqtt.Client(client_id="telegram")
 client.connect(settings.init()["broker_address"])
-telegram_lib = ToScrape
+telegram_lib = ToScrape()
 
 def on_message(client, userdata, message):
     """
@@ -32,9 +32,9 @@ class TelegramDumpFinder:
     """
     Framework di backend principale
     """
-
+    @staticmethod
     def __get_dump_metadata(self):
-        toConvert = ToScrape.get_data_to_send(ToScrape)
+        toConvert = telegram_lib.get_data_to_send()
         if toConvert is not None and toConvert.get("date") is not None:
             stringToSend = json.dumps(toConvert)
             return stringToSend
@@ -46,7 +46,6 @@ class TelegramDumpFinder:
         Metodo privato adibito al trasferimento del risultato della ricerca
         sui gruppi telegram sul broker MQTT
         """
-
         stringToSend = TelegramDumpFinder.__get_dump_metadata(TelegramDumpFinder)
         if stringToSend is not None:
             client.publish(topic="Dump", payload=stringToSend)
@@ -76,9 +75,12 @@ class TelegramDumpFinder:
         if request_to_find.get("dump_name") is not None:
             tofind = request_to_find.get("dump_name")
             await telegram_lib.find_dump(tofind)
+            if telegram_lib.get_data_to_send(telegram_lib) is None:
+                await telegram_lib.message_reader(tofind)
+                print("Debug message: messaggio relativo al dump trovato")
+            else:
+                print("Debug message: dump trovato")
             request_to_find.clear()
-            print("Debug message: dump trovato")
-
     @staticmethod
     def listening_thread(self):
 
@@ -111,6 +113,5 @@ class TelegramDumpFinder:
         all'inoltro delle informazioni ricercate su telegram
         al broker MQTT, appena queste sono disponibili
         """
-
         sending_thread = threading.Thread(target=await TelegramDumpFinder.__send_data(TelegramDumpFinder), args=(1,))
         sending_thread.start()

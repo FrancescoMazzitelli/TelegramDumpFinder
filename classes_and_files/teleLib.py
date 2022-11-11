@@ -35,7 +35,7 @@ class ToScrape:
             print("Client created")
             await client.disconnect()
 
-    async def message_reader(group_id):
+    async def message_reader(filename):
 
         """
             Metodo che ritorna la lista di tutta la cronologia di messaggi inviati
@@ -45,21 +45,33 @@ class ToScrape:
             :return: Lista dei messaggi inviati
         """
 
-        mex_list = []
+        global return_data
 
-        async with TelegramClient(username, api_id, api_hash) as client:
-            messages = await client.get_messages(group_id, limit=1000)
-            for message in messages:
-                if message.sender_id is not None and message.sender.username is not None:
-                    data = {"group": group_id,
+        async for message in client.iter_messages(None, search=filename):
+            entity = await client.get_entity(message.chat_id)
+            if filename in message.text:
+                if hasattr(entity, 'title') and hasattr(message.sender, 'username'):
+                    data = {"group id": message.chat_id,
+                            "group name": entity.title,
                             "sender id": message.sender_id,
                             "sender": message.sender.username,
                             "text": message.text,
                             "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
-                    if not data.get("text") is None:
-                        mex_list.append(data)
-            client.disconnect()
-            return mex_list
+                    return_data = data
+                elif hasattr(entity, 'title'):
+                    data = {"group id": message.chat_id,
+                            "group name": entity.title,
+                            "sender id": message.sender_id,
+                            "text": message.text,
+                            "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
+                    return_data = data
+                else:
+                    data = {"sender id": message.sender_id,
+                            "sender": message.sender.username,
+                            "text": message.text,
+                            "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
+                    return_data = data
+            return
 
     def print_mex_list(mex_list):
 
@@ -141,6 +153,8 @@ class ToScrape:
         """
         global return_data
         toReturn = return_data.copy()
-        if not toReturn.get("date") is None:
+        if toReturn.get("date") is not None:
             return_data.clear()
             return toReturn
+        else:
+            return None
