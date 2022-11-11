@@ -4,35 +4,31 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7986653d-7950-4606-b19b-7cbfd254f15d" name="Changes" comment="">
+    <list default="true" id="b03a2718-538c-4c2e-a537-7c15660d2eab" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Francesco.session" beforeDir="false" afterPath="$PROJECT_DIR$/Francesco.session" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Francesco.session" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/classes_and_files/backend.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes_and_files/backend.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes_and_files/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/classes_and_files/settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes_and_files/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes_and_files/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/classes_and_files/settings_dark.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/classes_and_files/teleLib.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes_and_files/teleLib.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srss2022.session" beforeDir="false" afterPath="$PROJECT_DIR$/srss2022.session" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Python Script" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/../AppData/Local/Programs/Python/Python310/Lib/asyncio/base_events.py" root0="SKIP_INSPECTION" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectId" id="2HFzOGmR9wePuEOz2MKhzNErNxY" />
+  <component name="ProjectId" id="2HOSgmfjqFyNT6ERs6fWgtlNQus" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -40,9 +36,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Users/panne/DumpDownloaderTelegram",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+    "RunOnceActivity.ShowReadmeOnStart": "true"
   }
 }]]></component>
   <component name="RunManager">
@@ -76,11 +70,11 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="7986653d-7950-4606-b19b-7cbfd254f15d" name="Changes" comment="" />
-      <created>1667895587897</created>
+      <changelist id="b03a2718-538c-4c2e-a537-7c15660d2eab" name="Changes" comment="" />
+      <created>1668154750716</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1667895587897</updated>
+      <updated>1668154750716</updated>
     </task>
     <servers />
   </component>

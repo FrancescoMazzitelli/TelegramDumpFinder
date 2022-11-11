@@ -1,6 +1,5 @@
 from telethon import TelegramClient
 from pathlib import Path
-from tqdm import tqdm
 from classes_and_files import settings
 import os
 
@@ -108,11 +107,18 @@ class ToScrape:
             file = message.file
             if file is not None and file.name is not None:
                 entity = await client.get_entity(message.chat_id)
-                if hasattr(entity, 'title'):
+                if hasattr(entity, 'title') and hasattr(message.sender, 'username'):
                     data = {"group id": message.chat_id,
                             "group name": entity.title,
                             "sender id": message.sender_id,
                             "sender": message.sender.username,
+                            "text": message.text,
+                            "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
+                    return_data = data
+                elif hasattr(entity, 'title'):
+                    data = {"group id": message.chat_id,
+                            "group name": entity.title,
+                            "sender id": message.sender_id,
                             "text": message.text,
                             "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
                     return_data = data
@@ -135,6 +141,6 @@ class ToScrape:
         """
         global return_data
         toReturn = return_data.copy()
-        if not toReturn.get("sender id") is None:
+        if not toReturn.get("date") is None:
             return_data.clear()
             return toReturn

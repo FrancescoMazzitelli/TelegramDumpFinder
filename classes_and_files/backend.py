@@ -35,7 +35,7 @@ class TelegramDumpFinder:
 
     def __get_dump_metadata(self):
         toConvert = ToScrape.get_data_to_send(ToScrape)
-        if toConvert is not None and toConvert.get("sender id") is not None:
+        if toConvert is not None and toConvert.get("date") is not None:
             stringToSend = json.dumps(toConvert)
             return stringToSend
 
@@ -75,12 +75,9 @@ class TelegramDumpFinder:
         global request_to_find
         if request_to_find.get("dump_name") is not None:
             tofind = request_to_find.get("dump_name")
-            if await telegram_lib.find_dump(tofind):
-                print("Debug message: dump trovato")
-            else:
-                print("Debug message: dump non trovato")
-
+            await telegram_lib.find_dump(tofind)
             request_to_find.clear()
+            print("Debug message: dump trovato")
 
     @staticmethod
     def listening_thread(self):
