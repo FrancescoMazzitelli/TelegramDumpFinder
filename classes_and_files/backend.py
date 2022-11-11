@@ -6,9 +6,10 @@ from classes_and_files.teleLib import ToScrape
 
 
 request_to_find = dict()
+result_to_send = dict()
 client = mqtt.Client(client_id="telegram")
 client.connect(settings.init()["broker_address"])
-telegram_lib = ToScrape()
+telegram_lib = ToScrape
 
 def on_message(client, userdata, message):
     """
@@ -34,9 +35,14 @@ class TelegramDumpFinder:
     """
     @staticmethod
     def __get_dump_metadata(self):
-        toConvert = telegram_lib.get_data_to_send()
-        if toConvert is not None and toConvert.get("date") is not None:
-            stringToSend = json.dumps(toConvert)
+        global  result_to_send
+        if result_to_send is not None and result_to_send.get("date") is not None:
+            stringToSend = json.dumps(result_to_send)
+            result_to_send.clear()
+            return stringToSend
+        elif result_to_send is not None and result_to_send.get("failure message") is not None:
+            stringToSend = json.dumps(result_to_send)
+            result_to_send.clear()
             return stringToSend
 
     @staticmethod
@@ -71,15 +77,20 @@ class TelegramDumpFinder:
         ricerca il dump tra i gruppi e pulisce la cache
         """
 
-        global request_to_find
+        global request_to_find, result_to_send
         if request_to_find.get("dump_name") is not None:
             tofind = request_to_find.get("dump_name")
             await telegram_lib.find_dump(tofind)
-            if telegram_lib.get_data_to_send(telegram_lib) is None:
+            toCheck = telegram_lib.get_data_to_send(telegram_lib)
+            if toCheck is None:
                 await telegram_lib.message_reader(tofind)
                 print("Debug message: messaggio relativo al dump trovato")
-            else:
+            elif toCheck.get("date") is not None:
+                result_to_send = toCheck.copy()
                 print("Debug message: dump trovato")
+            else:
+                result_to_send = toCheck.copy()
+                print("Debug message: nessun riferimento trovato")
             request_to_find.clear()
     @staticmethod
     def listening_thread(self):

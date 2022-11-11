@@ -5,6 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b03a2718-538c-4c2e-a537-7c15660d2eab" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/DumpDownloaderTelegram.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DumpDownloaderTelegram.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/classes_and_files/backend.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes_and_files/backend.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/classes_and_files/teleLib.py" beforeDir="false" afterPath="$PROJECT_DIR$/classes_and_files/teleLib.py" afterDir="false" />
@@ -26,12 +28,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="DumpDownloaderTelegram" />

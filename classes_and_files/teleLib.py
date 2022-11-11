@@ -1,3 +1,5 @@
+import sys
+
 from telethon import TelegramClient
 from pathlib import Path
 from classes_and_files import settings
@@ -48,6 +50,8 @@ class ToScrape:
         global return_data
 
         async for message in client.iter_messages(None, search=filename):
+            if filename not in message.text:
+                return
             entity = await client.get_entity(message.chat_id)
             if filename in message.text:
                 if hasattr(entity, 'title') and hasattr(message.sender, 'username'):
@@ -56,6 +60,7 @@ class ToScrape:
                             "sender id": message.sender_id,
                             "sender": message.sender.username,
                             "text": message.text,
+                            "is message": True,
                             "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
                     return_data = data
                 elif hasattr(entity, 'title'):
@@ -63,12 +68,14 @@ class ToScrape:
                             "group name": entity.title,
                             "sender id": message.sender_id,
                             "text": message.text,
+                            "is message": True,
                             "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
                     return_data = data
                 else:
                     data = {"sender id": message.sender_id,
                             "sender": message.sender.username,
                             "text": message.text,
+                            "is message": True,
                             "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
                     return_data = data
             return
@@ -117,6 +124,8 @@ class ToScrape:
         await client.connect()
         async for message in client.iter_messages(None, search=filename):
             file = message.file
+            if file is None:
+                return
             if file is not None and file.name is not None:
                 entity = await client.get_entity(message.chat_id)
                 if hasattr(entity, 'title') and hasattr(message.sender, 'username'):
@@ -125,6 +134,7 @@ class ToScrape:
                             "sender id": message.sender_id,
                             "sender": message.sender.username,
                             "text": message.text,
+                            "is message": False,
                             "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
                     return_data = data
                 elif hasattr(entity, 'title'):
@@ -132,12 +142,14 @@ class ToScrape:
                             "group name": entity.title,
                             "sender id": message.sender_id,
                             "text": message.text,
+                            "is message": False,
                             "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
                     return_data = data
                 else:
                     data = {"sender id": message.sender_id,
                             "sender": message.sender.username,
                             "text": message.text,
+                            "is message": False,
                             "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
                     return_data = data
                 return
@@ -157,4 +169,5 @@ class ToScrape:
             return_data.clear()
             return toReturn
         else:
-            return None
+            toReturnFailure = {"failure message":"Non è stato trovato nessun riferimento al file desiderato su Telegram"}
+            return toReturnFailure
