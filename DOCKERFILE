@@ -1,0 +1,13 @@
+FROM python:latest
+
+WORKDIR usr/src/app
+
+COPY classes_and_files DumpDownloaderTelegram
+COPY main.py DumpDownloaderTelegram
+COPY srss2022.session DumpDownloaderTelegram
+
+RUN pip install --no-cache-dir
+RUN pip install telethon
+RUN pip install paho.mqtt
+
+CMD ["python", "./ DumpDownloaderTelegram/main.py"]

@@ -12,6 +12,7 @@ client.connect(settings.init()["broker_address"])
 telegram_lib = ToScrape
 
 def on_message(client, userdata, message):
+    
     """
     Callback che consente di interagire con i messaggi ricevuti;
     la stringa di bytes ricevuta dal broker mqtt viene salvata

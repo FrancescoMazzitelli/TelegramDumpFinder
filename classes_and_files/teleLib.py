@@ -1,5 +1,3 @@
-import sys
-
 from telethon import TelegramClient
 from pathlib import Path
 from classes_and_files import settings
@@ -28,14 +26,13 @@ class ToScrape:
         Metodo che inizializza il client Telegram effettuando l'operazione
         di login con l'autenticazione a due fattori
 
-        :return: Inizializzazione della connessione
+        :return: Inizializzazione della connessione e creazione del file Username.session
         """
 
         async with TelegramClient(username, api_id, api_hash) as client:
             await client.start()
-
             print("Client created")
-            await client.disconnect()
+            #await client.disconnect()
 
     async def message_reader(filename):
 
@@ -80,18 +77,6 @@ class ToScrape:
                     return_data = data
             return
 
-    def print_mex_list(mex_list):
-
-        """
-            Metodo che stampa a schermo il contenuto della lista statica
-            adibita allo storage dei messaggi
-
-            :param mex_list: Lista di messaggi da stampare a schermo
-        """
-
-        for i in range(0, len(mex_list)):
-            print(mex_list[i])
-
     async def download_file(filename):
 
         """
@@ -124,9 +109,9 @@ class ToScrape:
         await client.connect()
         async for message in client.iter_messages(None, search=filename):
             file = message.file
-            if file is None:
+            if file is None or file.name is None:
                 return
-            if file is not None and file.name is not None:
+            if file is not None:
                 entity = await client.get_entity(message.chat_id)
                 if hasattr(entity, 'title') and hasattr(message.sender, 'username'):
                     data = {"group id": message.chat_id,
