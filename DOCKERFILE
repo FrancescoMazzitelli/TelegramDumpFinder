@@ -2,12 +2,10 @@ FROM python:latest
 
 WORKDIR usr/src/app
 
-COPY classes_and_files DumpDownloaderTelegram
-COPY main.py DumpDownloaderTelegram
-COPY srss2022.session DumpDownloaderTelegram
+COPY classes_and_files telegramdumpfinder/classes_and_files
+COPY main.py telegramdumpfinder
+COPY create_session.py telegramdumpfinder
 
-RUN pip install --no-cache-dir
+RUN pip install --upgrade pip
 RUN pip install telethon
 RUN pip install paho.mqtt
-
-CMD ["python", "./ DumpDownloaderTelegram/main.py"]
