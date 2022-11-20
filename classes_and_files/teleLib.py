@@ -135,7 +135,8 @@ class ToScrape:
                             "sender": message.sender.username,
                             "text": message.text,
                             "is message": False,
-                            "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
+                            "date": message.date.strftime("%Y-%m-%d %H:%M:%S")
+                            }
                     return_data = data
                 return
 

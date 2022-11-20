@@ -4,6 +4,10 @@ import threading
 from classes_and_files import settings
 from classes_and_files.teleLib import ToScrape
 
+from pymongo import MongoClient
+
+
+CONNECTION_STRING = "mongodb://localhost:27017/"
 
 request_to_find = dict()
 result_to_send = dict()
@@ -26,6 +30,7 @@ def on_message(client, userdata, message):
 
     print("Debug message: messaggio ricevuto")
     request = json.loads(message.payload.decode("utf-8"))
+    print(request)
     global request_to_find
     request_to_find = request
 
@@ -54,9 +59,17 @@ class TelegramDumpFinder:
         sui gruppi telegram sul broker MQTT
         """
         stringToSend = TelegramDumpFinder.__get_dump_metadata(TelegramDumpFinder)
+        
         if stringToSend is not None:
+            print(stringToSend)
+            clientMongo = MongoClient(CONNECTION_STRING)
+            mongoDB = clientMongo["TelegramDump"]
+            collection = mongoDB["dump"]
+            collection.insert_one(json.loads(stringToSend))
+            clientMongo.close
             client.publish(topic="Dump", payload=stringToSend)
             print("Debug message: messaggio pubblicato sul broker")
+        
 
     @staticmethod
     def __listening(self):
