@@ -8,7 +8,9 @@ from pymongo import MongoClient
 
 
 CONNECTION_STRING = "mongodb://localhost:27017/"
-
+clientMongo = MongoClient(CONNECTION_STRING)
+mongoDB = clientMongo["TelegramDump"]
+collection = mongoDB["dump"]
 request_to_find = dict()
 result_to_send = dict()
 client = mqtt.Client(client_id="telegram")
@@ -61,12 +63,9 @@ class TelegramDumpFinder:
         stringToSend = TelegramDumpFinder.__get_dump_metadata(TelegramDumpFinder)
         
         if stringToSend is not None:
-            print(stringToSend)
-            clientMongo = MongoClient(CONNECTION_STRING)
-            mongoDB = clientMongo["TelegramDump"]
-            collection = mongoDB["dump"]
+            
             collection.insert_one(json.loads(stringToSend))
-            clientMongo.close
+           # clientMongo.close
             client.publish(topic="Dump", payload=stringToSend)
             print("Debug message: messaggio pubblicato sul broker")
         
