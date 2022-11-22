@@ -1,9 +1,10 @@
 from telethon import TelegramClient
 from pathlib import Path
 from classes_and_files import settings
+from tqdm import tqdm
 import os
 
-return_data = dict()
+global pbar
 
 api_id = settings.init()['api_id']
 api_hash = settings.init()['api_hash']
@@ -12,6 +13,10 @@ phone = settings.init()['phone']
 
 client = TelegramClient(username, api_id, api_hash)
 
+class DownloadProgressBar(tqdm):
+    def update_to(self, current, total):
+        self.total = total
+        self.update(current - self.n)
 
 class ToScrape:
 
@@ -32,7 +37,6 @@ class ToScrape:
         async with TelegramClient(username, api_id, api_hash) as client:
             await client.start()
             print("Client created")
-            #await client.disconnect()
 
     async def message_reader(filename):
 
@@ -43,9 +47,6 @@ class ToScrape:
             :param group_id: Identificatore del gruppo espresso come @nome_gruppo
             :return: Lista dei messaggi inviati
         """
-
-        global return_data
-
         async for message in client.iter_messages(None, search=filename):
             if filename not in message.text:
                 return
@@ -87,25 +88,28 @@ class ToScrape:
         :return: Il file d'interesse viene scaricato nella cartella "temp"
         """
 
-        file = ToScrape.find_dump(filename)
+        await client.connect()
+        async for message in client.iter_messages(None, search=filename):
+            file = message.file
+            if file is None or file.name is None:
+                return
+            if file is not None:
+                dirToCheck = Path("classes_and_files/temp_dir")
+                if not dirToCheck.exists():
+                    os.mkdir(os.path.join('classes_and_files/temp_dir'))
+                with DownloadProgressBar(unit='B', unit_scale=True) as t:
+                    await message.download_media(file=os.path.join('classes_and_files/temp_dir/'+file.name), progress_callback=t.update_to)
 
-        if file is not None and file.name is not None and filename in file.name:
-            dirToCheck = Path("classes_and_files/temp_dir")
-            if not dirToCheck.exists():
-                os.mkdir(os.path.join('classes_and_files/temp_dir'))
-            await file.download_media(file=os.path.join('classes_and_files/temp_dir/'+file.name))
 
     async def find_dump(filename):
 
         """
         Metodo che recupera il riferimento ad un file dump specifico in un gruppo specifico
 
-        :param group_id: Identificatore del gruppo espresso come @nome_gruppo
-        :param filename: Nome del file da ricercare nel gruppo
-        :return: File json contenente i metadati del messaggio
+        :param filename: Nome del file da ricercare su telegram
+        :return: Dizionario contenente i metadati del messaggio
         """
 
-        global return_data
         await client.connect()
         async for message in client.iter_messages(None, search=filename):
             file = message.file
@@ -121,7 +125,9 @@ class ToScrape:
                             "text": message.text,
                             "is message": False,
                             "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
-                    return_data = data
+                    
+                    return data
+
                 elif hasattr(entity, 'title'):
                     data = {"group id": message.chat_id,
                             "group name": entity.title,
@@ -129,7 +135,9 @@ class ToScrape:
                             "text": message.text,
                             "is message": False,
                             "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
-                    return_data = data
+
+                    return data
+
                 else:
                     data = {"sender id": message.sender_id,
                             "sender": message.sender.username,
@@ -137,23 +145,8 @@ class ToScrape:
                             "is message": False,
                             "date": message.date.strftime("%Y-%m-%d %H:%M:%S")
                             }
-                    return_data = data
-                return
 
-    def get_data_to_send(self):
-        """
-        Metodo che accede alla variabile globale return_data in cui
-        sono contenute le informazioni ottenute come risultato dal
-        metodo find_dump()
+                    return data
+            failure = {"failure message":"Non è stato trovato nessun riferimento al file desiderato su Telegram"}
+            return failure
 
-        :return: variabile globale contente il risultato dell'elaborazione
-                 di find_dump()
-        """
-        global return_data
-        toReturn = return_data.copy()
-        if toReturn.get("date") is not None:
-            return_data.clear()
-            return toReturn
-        else:
-            toReturnFailure = {"failure message":"Non è stato trovato nessun riferimento al file desiderato su Telegram"}
-            return toReturnFailure
