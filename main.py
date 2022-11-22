@@ -14,7 +14,9 @@ async def find_dump(filename):
 @app.route("/breaches/<filename>/<string_to_find>")
 async def download_dump(filename, string_to_find):
     result = await TelegramDumpFinder.download_dump(filename, string_to_find)
+    await TelegramDumpFinder.test(app)
     return jsonify(result)
+    
 
 if __name__ == '__main__':
     app.run()

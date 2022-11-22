@@ -37,7 +37,7 @@ class TelegramDumpFinder:
         :param to_search: Stringa da trovare nel file d'interesse per grep
         :return: Dict che verrà poi spedito tramite HTTP
         """
-        
+
         dict = {"Results": []}
         if filename is not None:
             if os.path.exists('classes_and_files/temp_dir'):
@@ -79,7 +79,11 @@ class TelegramDumpFinder:
                         f.close()
                         TelegramDumpFinder.__clear_cache()
                         return dict
-               
+                        
+    @staticmethod     
+    async def test(self):
+        Mongo.mongo_expire()
+
     def __clear_cache():
         
         """
