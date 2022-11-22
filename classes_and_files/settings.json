@@ -3,5 +3,5 @@
   "api_hash": "aeb70eacc5362852e84bc4dce6db3587",
   "username": "srss2022",
   "phone": "+393452669441",
-  "connection_string": "mongodb://localhost:27017/"
+  "connection_string": "mongodb://localhost:27017"
 }
