@@ -53,10 +53,12 @@ class Mongo:
         cursor = collection.find()
         for record in cursor:
             if record['date'].date() + timedelta(weeks=1) <= date.today(): # versione corretta
-            #if record['date'].date() <= date.today():                   # versione di prova
+#            if record['date'].date() <= date.today():                   # versione di prova
                 print("Dump ",record['_id']," scaduto")
                 collection.delete_one({'_id':record['_id']})
-                mongoDB.fs.files.delete_one({'filename':record['_id']})
+                file_id = fs.find_one({'filename': record['_id']})._id
+                fs.delete(file_id)
+                #mongoDB.fs.files.delete_one({'filename':record['_id']})
 
     def exists(file_name):
         return fs.exists(filename=file_name)
