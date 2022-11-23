@@ -3,6 +3,7 @@ from classes_and_files.mongo_class import Mongo
 import os
 import re
 import shutil
+import asyncio
 
 telegram_lib = ToScrape
 
@@ -12,14 +13,14 @@ class TelegramDumpFinder:
     async def find_dump(filename):
 
         """
-        Metodo che recupera il nome del dump dalla variabile globale,
-        ricerca il dump tra i gruppi e pulisce la cache
+        
         """
 
         if filename is not None:
             to_send = await telegram_lib.find_dump(filename)
-            print("Debug message: dump trovato")
+            print("-----------------Debug message: dump trovato")
             return to_send
+              
 
     @staticmethod
     async def download_dump(filename, to_search):
@@ -41,7 +42,7 @@ class TelegramDumpFinder:
         dict = {"Results": []}
         if filename is not None:
             if os.path.exists('classes_and_files/temp_dir'):
-                print("Debug message: dump presente sul filesystem")
+                print("-----------------Debug message: dump presente sul filesystem")
                 for file in os.listdir('classes_and_files/temp_dir'):
                     if filename in file:
                         f = open('classes_and_files/temp_dir/'+file, "r")
@@ -53,8 +54,8 @@ class TelegramDumpFinder:
                         return dict
 
             elif not Mongo.exists(filename) and not os.path.exists('classes_and_files/temp_dir'):
-                print("Debug message: dump non presente ne su Mongo ne sul filesystem")
-                print("Debug message: dump in download")
+                print("-----------------Debug message: dump non presente ne su Mongo ne sul filesystem")
+                print("-----------------Debug message: dump in download")
                 date = await telegram_lib.download_file(filename)
                 Mongo.mongo_put(filename, date)
                 for file in os.listdir('classes_and_files/temp_dir'):
@@ -68,7 +69,7 @@ class TelegramDumpFinder:
                         return dict
             
             elif Mongo.exists(filename) and not os.path.exists('classes_and_files/temp_dir'):
-                print("Debug message: dump presente su Mongo")
+                print("-----------------Debug message: dump presente su Mongo")
                 Mongo.mongo_get(filename)
                 for file in os.listdir('classes_and_files/temp_dir'):
                     if filename in file:
