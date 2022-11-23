@@ -5,7 +5,9 @@ WORKDIR usr/src/app
 COPY classes_and_files telegramdumpfinder/classes_and_files
 COPY main.py telegramdumpfinder
 COPY create_session.py telegramdumpfinder
+COPY requirements.txt telegramDumpfinder
+
+#ROBA PER INSTALLARE MONGO NEL CONTAINER
 
 RUN pip install --upgrade pip
-RUN pip install telethon
-RUN pip install paho.mqtt
+RUN pip install -r requirements.txt
