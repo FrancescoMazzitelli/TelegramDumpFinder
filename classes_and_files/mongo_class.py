@@ -52,11 +52,11 @@ class Mongo:
     def mongo_expire():
         cursor = collection.find()
         for record in cursor:
-            #if record['date'].date() + timedelta(weeks=1) <= date.today(): # versione corretta
-            if record['date'].date() <= date.today():                   # versione di prova
+            if record['date'].date() + timedelta(weeks=1) <= date.today(): # versione corretta
+            #if record['date'].date() <= date.today():                   # versione di prova
                 print("Dump ",record['_id']," scaduto")
-                #collection.delete(record)
-                fs.delete(record['_id'])
+                collection.delete_one({'_id':record['_id']})
+                mongoDB.fs.files.delete_one({'filename':record['_id']})
 
     def exists(file_name):
         return fs.exists(filename=file_name)
