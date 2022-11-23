@@ -9,7 +9,7 @@ from datetime import date, timedelta
 CONNECTION_STRING = settings.init()['connection_string']
 clientMongo = MongoClient(CONNECTION_STRING)
 mongoDB = clientMongo["TelegramDumpFinder"]
-collection = mongoDB["files.metadata"]
+collection = mongoDB['files.metadata']
 files=mongoDB['fs.files']
 fs = GridFS(mongoDB)
 
@@ -19,7 +19,7 @@ class Mongo:
     Classe framework Mongo
     """
 
-    def mongo_put(file_name):
+    def mongo_put(file_name,date):
         global file_map
         if os.path.exists('classes_and_files/temp_dir'):
             for file in os.listdir('classes_and_files/temp_dir'):
@@ -27,7 +27,8 @@ class Mongo:
                     file_extension = pathlib.Path('classes_and_files/temp_dir/'+file).suffix
                     metadata = {
                         "_id": file_name,
-                        "file_extension": file_extension
+                        "file_extension": file_extension,
+                        "date": date
                     }
                     collection.insert_one(metadata)
                     f = open('classes_and_files/temp_dir/'+file, "rb")
@@ -49,11 +50,12 @@ class Mongo:
         output.close
 
     def mongo_expire():
-        cursor = files.find()
+        cursor = collection.find()
         for record in cursor:
-            if record['uploadDate'].date() + timedelta(weeks=1) <= date.today(): # versione corretta
-            #if record['uploadDate'].date() >= date.today():                    versione di prova
-                print("Dump ",record['filename']," scaduto")
+            #if record['date'].date() + timedelta(weeks=1) <= date.today(): # versione corretta
+            if record['date'].date() <= date.today():                   # versione di prova
+                print("Dump ",record['_id']," scaduto")
+                #collection.delete(record)
                 fs.delete(record['_id'])
 
     def exists(file_name):

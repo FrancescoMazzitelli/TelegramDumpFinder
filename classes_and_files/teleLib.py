@@ -99,7 +99,7 @@ class ToScrape:
                     os.mkdir(os.path.join('classes_and_files/temp_dir'))
                 with DownloadProgressBar(unit='B', unit_scale=True) as t:
                     await message.download_media(file=os.path.join('classes_and_files/temp_dir/'+file.name), progress_callback=t.update_to)
-                    return
+                    return message.date
 
 
     async def find_dump(filename):

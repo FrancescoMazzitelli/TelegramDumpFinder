@@ -55,8 +55,8 @@ class TelegramDumpFinder:
             elif not Mongo.exists(filename) and not os.path.exists('classes_and_files/temp_dir'):
                 print("Debug message: dump non presente ne su Mongo ne sul filesystem")
                 print("Debug message: dump in download")
-                await telegram_lib.download_file(filename)
-                Mongo.mongo_put(filename)
+                date = await telegram_lib.download_file(filename)
+                Mongo.mongo_put(filename, date)
                 for file in os.listdir('classes_and_files/temp_dir'):
                     if filename in file:
                         f = open('classes_and_files/temp_dir/'+file, "r")
