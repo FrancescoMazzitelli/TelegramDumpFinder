@@ -4,7 +4,7 @@ from gridfs import GridFS
 import os
 import zlib
 import pathlib
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 CONNECTION_STRING = settings.init()['connection_string']
 clientMongo = MongoClient(CONNECTION_STRING)
@@ -19,7 +19,7 @@ class Mongo:
     Classe framework Mongo
     """
 
-    def mongo_put(file_name,date):
+    def mongo_put(file_name):
         global file_map
         if os.path.exists('classes_and_files/temp_dir'):
             for file in os.listdir('classes_and_files/temp_dir'):
@@ -28,7 +28,7 @@ class Mongo:
                     metadata = {
                         "_id": file_name,
                         "file_extension": file_extension,
-                        "date": date
+                        "download_date": datetime.now()
                     }
                     collection.insert_one(metadata)
                     f = open('classes_and_files/temp_dir/'+file, "rb")
@@ -52,13 +52,12 @@ class Mongo:
     def mongo_expire():
         cursor = collection.find()
         for record in cursor:
-            if record['date'].date() + timedelta(weeks=1) <= date.today(): # versione corretta
-#            if record['date'].date() <= date.today():                   # versione di prova
+            if record['download_date'].date() + timedelta(weeks=1) <= date.today(): # versione corretta
+            #if record['download_date'].date() <= date.today():                   # versione di prova
                 print("Dump ",record['_id']," scaduto")
                 collection.delete_one({'_id':record['_id']})
                 file_id = fs.find_one({'filename': record['_id']})._id
                 fs.delete(file_id)
-                #mongoDB.fs.files.delete_one({'filename':record['_id']})
 
     def exists(file_name):
         return fs.exists(filename=file_name)
