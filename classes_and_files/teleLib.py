@@ -67,7 +67,7 @@ class ToScrape:
         Metodo che recupera il riferimento ad un file dump specifico in un gruppo specifico
 
         :param filename: Nome del file da ricercare su telegram
-        :return: Dizionario contenente i metadati del messaggio
+        :return: Dizionario contenente i metadati del file
         """
 
         async with TelegramClient(username, api_id, api_hash) as client:
@@ -76,7 +76,7 @@ class ToScrape:
             async for message in client.iter_messages(None, search=filename):
                 file = message.file
                 if file is None or file.name is None:
-                    data = {"failure message":"Non è stato trovato nessun riferimento al file desiderato su Telegram"}
+                    data = None
                     await client.disconnect()
                     break
                 elif file is not None:
@@ -121,18 +121,23 @@ class ToScrape:
     async def message_reader(filename):
         
         """
-        Metodo che ricerca un file all'interno di tutte le chat di Telegram
+        Metodo che ricerca un messaggio all'interno di tutte le chat di Telegram,
+        in riferimento al file d'interesse
 
         :param filename: Nome del file da ricercare 
-        :return: Lista dei messaggi inviati
+        :return: Dizionario contenente i metadati del file
         """
 
         async with TelegramClient(username, api_id, api_hash) as client:
+            await client.connect()
+            data = dict()
             async for message in client.iter_messages(None, search=filename):
                 if filename not in message.text:
-                    return
-                entity = await client.get_entity(message.chat_id)
-                if filename in message.text:
+                    data = {"failure_message":"Non è stato trovato nessun riferimento al file desiderato su Telegram"}
+                    await client.disconnect()
+                    break
+                elif filename in message.text:
+                    entity = await client.get_entity(message.chat_id)
                     if hasattr(entity, 'title') and hasattr(message.sender, 'username'):
                         data = {"group id": message.chat_id,
                                 "group name": entity.title,
@@ -141,7 +146,10 @@ class ToScrape:
                                 "text": message.text,
                                 "is message": True,
                                 "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
-                        return_data = data
+
+                        await client.disconnect()
+                        break
+
                     elif hasattr(entity, 'title'):
                         data = {"group id": message.chat_id,
                                 "group name": entity.title,
@@ -149,12 +157,19 @@ class ToScrape:
                                 "text": message.text,
                                 "is message": True,
                                 "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
-                        return_data = data
+
+                        await client.disconnect()
+                        break
+
                     else:
                         data = {"sender id": message.sender_id,
                                 "sender": message.sender.username,
                                 "text": message.text,
                                 "is message": True,
                                 "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
-                        return_data = data
-                return
+
+                        await client.disconnect()
+                        break
+
+            client.disconnect()
+            return data

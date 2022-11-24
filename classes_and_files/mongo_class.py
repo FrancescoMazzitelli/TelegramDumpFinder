@@ -71,12 +71,12 @@ class Mongo:
 
         cursor = collection.find()
         for record in cursor:
-            if record['download_date'].date() + timedelta(weeks=1) <= date.today(): # versione corretta
-            #if record['download_date'].date() <= date.today():                   # versione di prova
-                print("Dump ",record['_id']," scaduto")
-                collection.delete_one({'_id':record['_id']})
-                file_id = fs.find_one({'filename': record['_id']})._id
-                fs.delete(file_id)
+            if record['download_date'] is not None:
+                if record['download_date'].date() + timedelta(weeks=1) <= date.today(): 
+                    print("Dump ",record['_id']," scaduto")
+                    collection.delete_one({'_id':record['_id']})
+                    file_id = fs.find_one({'filename': record['_id']})._id
+                    fs.delete(file_id)
 
     def exists(file_name):
         
