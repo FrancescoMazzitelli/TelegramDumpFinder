@@ -74,6 +74,7 @@ class ToScrape:
             await client.connect()
             data = dict()
             async for message in client.iter_messages(None, search=filename):
+                print("DENTRO FINDDUMP")
                 file = message.file
                 if file is None or file.name is None:
                     data = None
@@ -130,13 +131,16 @@ class ToScrape:
 
         async with TelegramClient(username, api_id, api_hash) as client:
             await client.connect()
+            print("DOPO CONNESSIONE")
             data = dict()
             async for message in client.iter_messages(None, search=filename):
+                print("Dentro message")
                 if filename not in message.text:
                     data = {"failure_message":"Non è stato trovato nessun riferimento al file desiderato su Telegram"}
                     await client.disconnect()
                     break
                 elif filename in message.text:
+                    print("Dentro elif 1")
                     entity = await client.get_entity(message.chat_id)
                     if hasattr(entity, 'title') and hasattr(message.sender, 'username'):
                         data = {"group id": message.chat_id,

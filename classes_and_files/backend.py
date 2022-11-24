@@ -20,11 +20,10 @@ class TelegramDumpFinder:
         if filename is not None:
             to_send = await telegram_lib.find_dump(filename)
             print("-----------------Debug message: ricerca dump in corso")
-            if to_send is None:
+            if len(to_send) == 0 or to_send is None: 
                 print("-----------------Debug message: dump non trovato, ricerca riferimenti in corso")
                 to_sendM = await telegram_lib.message_reader(filename)
-                return to_sendM
-            return to_send
+            else: return to_send
             
               
 
