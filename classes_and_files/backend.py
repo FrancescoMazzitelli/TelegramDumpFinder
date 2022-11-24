@@ -13,12 +13,15 @@ class TelegramDumpFinder:
     async def find_dump(filename):
 
         """
+        Metodo che indirizza la ricerca di un dump su Telegram
         
+        :param filename Il nome del dump da cercare su Telegram
         """
 
         if filename is not None:
             to_send = await telegram_lib.find_dump(filename)
-            print("-----------------Debug message: dump trovato")
+            print("-----------------Debug message: ricerca dump in corso")
+            print(to_send)
             return to_send
               
 
@@ -26,17 +29,17 @@ class TelegramDumpFinder:
     async def download_dump(filename, to_search):
         
         """
-        Metodo che effettua l'operazione di grep su un file di interesse. \n
-        I possibili casi d'uso del metodo sono: \n
-        1) Sul filesystem esiste una cartella con all'interno i file da greppare \n
-        2) Il file d'interesse non esiste ne su Mongo ne sul file system 
+        Metodo che effettua l'operazione di grep su un file di interesse. 
+        I possibili casi d'uso del metodo sono: 
+        1) Sul filesystem esiste una cartella con all'interno i file da greppare 
+        2) Il file d'interesse non esiste nè su Mongo nè sul file system 
         viene quindi scaricato da telegram, pushato su Mongo per elaborazioni
-        future e inifine greppato \n
+        future e infine greppato 
         3) il file d'interesse esiste su Mongo, viene quindi recuperato e greppato
-
-        :param filename: Nome del file da cercare sia localmente che su telegram a seconda dei casi
-        :param to_search: Stringa da trovare nel file d'interesse per grep
-        :return: Dict che verrà poi spedito tramite HTTP
+        
+        :param filename Nome del file da cercare sia localmente sia su telegram a seconda dei casi
+        :param to_search Stringa da trovare nel file d'interesse per grep
+        :return Dict che verrà poi spedito tramite HTTP
         """
 
         dict = {"Results": []}

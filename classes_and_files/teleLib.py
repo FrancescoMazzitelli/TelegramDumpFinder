@@ -30,63 +30,24 @@ class ToScrape:
         Metodo che inizializza il client Telegram effettuando l'operazione
         di login con l'autenticazione a due fattori
 
-        :return: Inizializzazione della connessione e creazione del file Username.session
+        :return: Inizializzazione della connessione e creazione del file di sessione
         """
 
         async with TelegramClient(username, api_id, api_hash) as client:
             await client.start()
-            print("Client created")
+            print("Client creato")
 
-    async def message_reader(filename):
 
-        """
-            Metodo che ritorna la lista di tutta la cronologia di messaggi inviati
-            sul gruppo, il limite è stato impostato a 1000 messaggi ma è modificabile
-
-            :param group_id: Identificatore del gruppo espresso come @nome_gruppo
-            :return: Lista dei messaggi inviati
-        """
-        async with TelegramClient(username, api_id, api_hash) as client:
-            async for message in client.iter_messages(None, search=filename):
-                if filename not in message.text:
-                    return
-                entity = await client.get_entity(message.chat_id)
-                if filename in message.text:
-                    if hasattr(entity, 'title') and hasattr(message.sender, 'username'):
-                        data = {"group id": message.chat_id,
-                                "group name": entity.title,
-                                "sender id": message.sender_id,
-                                "sender": message.sender.username,
-                                "text": message.text,
-                                "is message": True,
-                                "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
-                        return_data = data
-                    elif hasattr(entity, 'title'):
-                        data = {"group id": message.chat_id,
-                                "group name": entity.title,
-                                "sender id": message.sender_id,
-                                "text": message.text,
-                                "is message": True,
-                                "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
-                        return_data = data
-                    else:
-                        data = {"sender id": message.sender_id,
-                                "sender": message.sender.username,
-                                "text": message.text,
-                                "is message": True,
-                                "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
-                        return_data = data
-                return
-
+    @staticmethod
     async def download_file(filename):
 
         """
-        Metodo che consente di scaricare un file specifico
-        e di salvarlo all'interno di una cartella temporanea
+        Metodo che consente di scaricare un file specifico e di salvarlo all'interno di una cartella temporanea
 
-        :param filename: Nome del file da ricercare
-        :return: Il file d'interesse viene scaricato nella cartella "temp"
+        :param filename Nome del file da ricercare
+        :return Il file d'interesse viene scaricato nella cartella temporanea
         """
+        
         async with TelegramClient(username, api_id, api_hash) as client:
             await client.connect()
             async for message in client.iter_messages(None, search=filename):
@@ -102,14 +63,14 @@ class ToScrape:
                         await client.disconnect()
                         return message.date
 
-
+    @staticmethod
     async def find_dump(filename):
 
         """
         Metodo che recupera il riferimento ad un file dump specifico in un gruppo specifico
 
-        :param filename: Nome del file da ricercare su telegram
-        :return: Dizionario contenente i metadati del messaggio
+        :param filename Nome del file da ricercare su telegram
+        :return Dizionario contenente i metadati del messaggio
         """
 
         async with TelegramClient(username, api_id, api_hash) as client:
@@ -159,3 +120,44 @@ class ToScrape:
             client.disconnect()
             return data
 
+
+    async def message_reader(filename):
+        
+        """
+            Metodo che ricerca un file all'interno di tutte le chat di Telegram
+
+            :param filename Nome del file da ricercare 
+            :return: Lista dei messaggi inviati
+        """
+
+        async with TelegramClient(username, api_id, api_hash) as client:
+            async for message in client.iter_messages(None, search=filename):
+                if filename not in message.text:
+                    return
+                entity = await client.get_entity(message.chat_id)
+                if filename in message.text:
+                    if hasattr(entity, 'title') and hasattr(message.sender, 'username'):
+                        data = {"group id": message.chat_id,
+                                "group name": entity.title,
+                                "sender id": message.sender_id,
+                                "sender": message.sender.username,
+                                "text": message.text,
+                                "is message": True,
+                                "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
+                        return_data = data
+                    elif hasattr(entity, 'title'):
+                        data = {"group id": message.chat_id,
+                                "group name": entity.title,
+                                "sender id": message.sender_id,
+                                "text": message.text,
+                                "is message": True,
+                                "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
+                        return_data = data
+                    else:
+                        data = {"sender id": message.sender_id,
+                                "sender": message.sender.username,
+                                "text": message.text,
+                                "is message": True,
+                                "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
+                        return_data = data
+                return
