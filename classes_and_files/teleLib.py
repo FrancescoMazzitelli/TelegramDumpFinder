@@ -74,46 +74,40 @@ class ToScrape:
             await client.connect()
             data = dict()
             async for message in client.iter_messages(None, search=filename):
-                print("DENTRO FINDDUMP")
                 file = message.file
-                if file is None or file.name is None:
-                    data = None
+                entity = await client.get_entity(message.chat_id)
+                if hasattr(entity, 'title') and hasattr(message.sender, 'username'):
+                    data = {"group id": message.chat_id,
+                            "group name": entity.title,
+                            "sender id": message.sender_id,
+                            "sender": message.sender.username,
+                            "text": message.text,
+                            "is message": False,
+                            "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
+                    
                     await client.disconnect()
                     break
-                elif file is not None:
-                    entity = await client.get_entity(message.chat_id)
-                    if hasattr(entity, 'title') and hasattr(message.sender, 'username'):
-                        data = {"group id": message.chat_id,
-                                "group name": entity.title,
-                                "sender id": message.sender_id,
-                                "sender": message.sender.username,
-                                "text": message.text,
-                                "is message": False,
-                                "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
-                        
-                        await client.disconnect()
-                        break
 
-                    elif hasattr(entity, 'title'):
-                        data = {"group id": message.chat_id,
-                                "group name": entity.title,
-                                "sender id": message.sender_id,
-                                "text": message.text,
-                                "is message": False,
-                                "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
-                        
-                        await client.disconnect()
-                        break
+                elif hasattr(entity, 'title'):
+                    data = {"group id": message.chat_id,
+                            "group name": entity.title,
+                            "sender id": message.sender_id,
+                            "text": message.text,
+                            "is message": False,
+                            "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
+                    
+                    await client.disconnect()
+                    break
 
-                    else:
-                        data = {"sender id": message.sender_id,
-                                "sender": message.sender.username,
-                                "text": message.text,
-                                "is message": False,
-                                "date": message.date.strftime("%Y-%m-%d %H:%M:%S")
-                                }
-                        await client.disconnect()
-                        break
+                else:
+                    data = {"sender id": message.sender_id,
+                            "sender": message.sender.username,
+                            "text": message.text,
+                            "is message": False,
+                            "date": message.date.strftime("%Y-%m-%d %H:%M:%S")
+                            }
+                    await client.disconnect()
+                    break
 
             client.disconnect()
             return data
@@ -131,49 +125,42 @@ class ToScrape:
 
         async with TelegramClient(username, api_id, api_hash) as client:
             await client.connect()
-            print("DOPO CONNESSIONE")
             data = dict()
             async for message in client.iter_messages(None, search=filename):
                 print("Dentro message")
-                if filename not in message.text:
-                    data = {"failure_message":"Non è stato trovato nessun riferimento al file desiderato su Telegram"}
+                entity = await client.get_entity(message.chat_id)
+                if hasattr(entity, 'title') and hasattr(message.sender, 'username'):
+                    data = {"group id": message.chat_id,
+                            "group name": entity.title,
+                            "sender id": message.sender_id,
+                            "sender": message.sender.username,
+                            "text": message.text,
+                            "is message": True,
+                            "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
+
                     await client.disconnect()
                     break
-                elif filename in message.text:
-                    print("Dentro elif 1")
-                    entity = await client.get_entity(message.chat_id)
-                    if hasattr(entity, 'title') and hasattr(message.sender, 'username'):
-                        data = {"group id": message.chat_id,
-                                "group name": entity.title,
-                                "sender id": message.sender_id,
-                                "sender": message.sender.username,
-                                "text": message.text,
-                                "is message": True,
-                                "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
 
-                        await client.disconnect()
-                        break
+                elif hasattr(entity, 'title'):
+                    data = {"group id": message.chat_id,
+                            "group name": entity.title,
+                            "sender id": message.sender_id,
+                            "text": message.text,
+                            "is message": True,
+                            "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
 
-                    elif hasattr(entity, 'title'):
-                        data = {"group id": message.chat_id,
-                                "group name": entity.title,
-                                "sender id": message.sender_id,
-                                "text": message.text,
-                                "is message": True,
-                                "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
+                    await client.disconnect()
+                    break
 
-                        await client.disconnect()
-                        break
+                else:
+                    data = {"sender id": message.sender_id,
+                            "sender": message.sender.username,
+                            "text": message.text,
+                            "is message": True,
+                            "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
 
-                    else:
-                        data = {"sender id": message.sender_id,
-                                "sender": message.sender.username,
-                                "text": message.text,
-                                "is message": True,
-                                "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
-
-                        await client.disconnect()
-                        break
-
-            client.disconnect()
+                    await client.disconnect()
+                    break
+            await client.disconnect()
             return data
+
