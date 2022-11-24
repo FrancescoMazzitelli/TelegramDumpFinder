@@ -3,9 +3,6 @@ from pathlib import Path
 from classes_and_files import settings
 from tqdm import tqdm
 import os
-import asyncio
-
-global pbar
 
 api_id = settings.init()['api_id']
 api_hash = settings.init()['api_hash']
@@ -44,8 +41,8 @@ class ToScrape:
         """
         Metodo che consente di scaricare un file specifico e di salvarlo all'interno di una cartella temporanea
 
-        :param filename Nome del file da ricercare
-        :return Il file d'interesse viene scaricato nella cartella temporanea
+        :param filename: Nome del file da ricercare
+        :return: Il file d'interesse viene scaricato nella cartella temporanea
         """
         
         async with TelegramClient(username, api_id, api_hash) as client:
@@ -69,8 +66,8 @@ class ToScrape:
         """
         Metodo che recupera il riferimento ad un file dump specifico in un gruppo specifico
 
-        :param filename Nome del file da ricercare su telegram
-        :return Dizionario contenente i metadati del messaggio
+        :param filename: Nome del file da ricercare su telegram
+        :return: Dizionario contenente i metadati del messaggio
         """
 
         async with TelegramClient(username, api_id, api_hash) as client:
@@ -124,10 +121,10 @@ class ToScrape:
     async def message_reader(filename):
         
         """
-            Metodo che ricerca un file all'interno di tutte le chat di Telegram
+        Metodo che ricerca un file all'interno di tutte le chat di Telegram
 
-            :param filename Nome del file da ricercare 
-            :return: Lista dei messaggi inviati
+        :param filename: Nome del file da ricercare 
+        :return: Lista dei messaggi inviati
         """
 
         async with TelegramClient(username, api_id, api_hash) as client:

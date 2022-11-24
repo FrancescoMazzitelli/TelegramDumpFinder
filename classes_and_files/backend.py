@@ -3,7 +3,6 @@ from classes_and_files.mongo_class import Mongo
 import os
 import re
 import shutil
-import asyncio
 
 telegram_lib = ToScrape
 
@@ -15,7 +14,7 @@ class TelegramDumpFinder:
         """
         Metodo che indirizza la ricerca di un dump su Telegram
         
-        :param filename Il nome del dump da cercare su Telegram
+        :param filename: Il nome del dump da cercare su Telegram
         """
 
         if filename is not None:
@@ -37,9 +36,9 @@ class TelegramDumpFinder:
         future e infine greppato 
         3) il file d'interesse esiste su Mongo, viene quindi recuperato e greppato
         
-        :param filename Nome del file da cercare sia localmente sia su telegram a seconda dei casi
-        :param to_search Stringa da trovare nel file d'interesse per grep
-        :return Dict che verrà poi spedito tramite HTTP
+        :param filename: Nome del file da cercare sia localmente sia su telegram a seconda dei casi
+        :param to_search: Stringa da trovare nel file d'interesse per grep
+        :return: Dict che verrà poi spedito tramite HTTP
         """
 
         dict = {"Results": []}
@@ -85,7 +84,12 @@ class TelegramDumpFinder:
                         return dict
                         
     @staticmethod     
-    async def test(self):
+    async def expire_data(self):
+        
+        """
+        Metodo che controlla se i dump nel database sono scaduti o meno
+        """
+
         Mongo.mongo_expire()
 
     def __clear_cache():

@@ -24,7 +24,7 @@ class Mongo:
         """
         Metodo che inserisce all'interno del database un nuovo dump scaricato in precedenza e posizionato in una cartella temporanea
        
-        :param file_name Il nome del dump collocato nella cartella e da caricare sul database
+        :param file_name: Il nome del dump collocato nella cartella e da caricare sul database
         """
         
         global file_map
@@ -48,7 +48,7 @@ class Mongo:
         """
         Metodo che recupera un dump dal database e lo salva su una cartella temporanea per effettuare operazioni di scraping
        
-        :param filename Nome del dump da cercare nel database
+        :param filename: Nome del dump da cercare nel database
         """
         
         data = mongoDB.fs.files.find_one({'filename': filename})
@@ -79,4 +79,11 @@ class Mongo:
                 fs.delete(file_id)
 
     def exists(file_name):
+        
+        """
+        Metodo che controlla l'esistenza di un dump sul database
+        
+        :param file_name: Nome del file da cercare
+        """
+        
         return fs.exists(filename=file_name)
