@@ -32,7 +32,7 @@ async def download_dump(filename, string_to_find):
     
     await TelegramDumpFinder.expire_data(flask_app)
     result = await TelegramDumpFinder.download_dump(filename, string_to_find)
-   
+    
     return jsonify(result)
     
 

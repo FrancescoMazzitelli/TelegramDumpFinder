@@ -49,16 +49,14 @@ class ToScrape:
             await client.connect()
             async for message in client.iter_messages(None, search=filename):
                 file = message.file
-                if file is None or file.name is None:
-                    return
-                if file is not None:
-                    dirToCheck = Path("classes_and_files/temp_dir")
-                    if not dirToCheck.exists():
-                        os.mkdir(os.path.join('classes_and_files/temp_dir'))
-                    with DownloadProgressBar(unit='B', unit_scale=True) as t:
-                        await message.download_media(file=os.path.join('classes_and_files/temp_dir/'+file.name), progress_callback=t.update_to)
-                        await client.disconnect()
-                        return message.date
+                dirToCheck = Path("classes_and_files/temp_dir")
+                if not dirToCheck.exists():
+                    os.mkdir(os.path.join('classes_and_files/temp_dir'))
+                with DownloadProgressBar(unit='B', unit_scale=True) as t:
+                    await message.download_media(file=os.path.join('classes_and_files/temp_dir/'+file.name), progress_callback=t.update_to)
+                    await client.disconnect()
+                    return message.date
+            return
 
     @staticmethod
     async def find_dump(filename):
@@ -112,7 +110,7 @@ class ToScrape:
             client.disconnect()
             return data
 
-
+    @staticmethod
     async def message_reader(filename):
         
         """
@@ -127,7 +125,6 @@ class ToScrape:
             await client.connect()
             data = dict()
             async for message in client.iter_messages(None, search=filename):
-                print("Dentro message")
                 entity = await client.get_entity(message.chat_id)
                 if hasattr(entity, 'title') and hasattr(message.sender, 'username'):
                     data = {"group id": message.chat_id,
