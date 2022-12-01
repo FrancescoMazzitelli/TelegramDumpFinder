@@ -49,13 +49,15 @@ class ToScrape:
             await client.connect()
             async for message in client.iter_messages(None, search=filename):
                 file = message.file
-                dirToCheck = Path("classes_and_files/temp_dir")
-                if not dirToCheck.exists():
-                    os.mkdir(os.path.join('classes_and_files/temp_dir'))
-                with DownloadProgressBar(unit='B', unit_scale=True) as t:
-                    await message.download_media(file=os.path.join('classes_and_files/temp_dir/'+file.name), progress_callback=t.update_to)
-                    await client.disconnect()
-                    return message.date
+                if file is not None and file.name is not None:
+                    dirToCheck = Path("classes_and_files/temp_dir")
+                    if not dirToCheck.exists():
+                        os.mkdir(os.path.join('classes_and_files/temp_dir'))
+                    with DownloadProgressBar(unit='B', unit_scale=True) as t:
+                        await message.download_media(file=os.path.join('classes_and_files/temp_dir/'+file.name), progress_callback=t.update_to)
+                        await client.disconnect()
+                        return message.date
+                return
             return
 
     @staticmethod
@@ -73,39 +75,41 @@ class ToScrape:
             data = dict()
             async for message in client.iter_messages(None, search=filename):
                 file = message.file
-                entity = await client.get_entity(message.chat_id)
-                if hasattr(entity, 'title') and hasattr(message.sender, 'username'):
-                    data = {"group id": message.chat_id,
-                            "group name": entity.title,
-                            "sender id": message.sender_id,
-                            "sender": message.sender.username,
-                            "text": message.text,
-                            "is message": False,
-                            "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
-                    
-                    await client.disconnect()
-                    break
+                if file is not None:
+                    entity = await client.get_entity(message.chat_id)
+                    if hasattr(entity, 'title') and hasattr(message.sender, 'username'):
+                        data = {"group id": message.chat_id,
+                                "group name": entity.title,
+                                "sender id": message.sender_id,
+                                "sender": message.sender.username,
+                                "text": message.text,
+                                "is message": False,
+                                "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
+                        
+                        await client.disconnect()
+                        break
 
-                elif hasattr(entity, 'title'):
-                    data = {"group id": message.chat_id,
-                            "group name": entity.title,
-                            "sender id": message.sender_id,
-                            "text": message.text,
-                            "is message": False,
-                            "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
-                    
-                    await client.disconnect()
-                    break
+                    elif hasattr(entity, 'title'):
+                        data = {"group id": message.chat_id,
+                                "group name": entity.title,
+                                "sender id": message.sender_id,
+                                "text": message.text,
+                                "is message": False,
+                                "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
+                        
+                        await client.disconnect()
+                        break
 
-                else:
-                    data = {"sender id": message.sender_id,
-                            "sender": message.sender.username,
-                            "text": message.text,
-                            "is message": False,
-                            "date": message.date.strftime("%Y-%m-%d %H:%M:%S")
-                            }
-                    await client.disconnect()
-                    break
+                    else:
+                        data = {"sender id": message.sender_id,
+                                "sender": message.sender.username,
+                                "text": message.text,
+                                "is message": False,
+                                "date": message.date.strftime("%Y-%m-%d %H:%M:%S")
+                                }
+                        await client.disconnect()
+                        break
+                else: return
 
             client.disconnect()
             return data

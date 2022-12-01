@@ -62,23 +62,29 @@ class TelegramDumpFinder:
             elif not Mongo.exists(filename) and not os.path.exists('classes_and_files/temp_dir'):
                 print("-----------------Debug message: dump non presente ne su Mongo ne sul filesystem")
                 print("-----------------Debug message: dump in download")
-                date = await telegram_lib.download_file(filename)
-                Mongo.mongo_put(filename)
-                if date is not None:
-                    for file in os.listdir('classes_and_files/temp_dir'):
-                        if filename in file:
-                            f = open('classes_and_files/temp_dir/'+file, "r")
-                            for line in f:
-                                if re.search(to_search, line, re.IGNORECASE):
-                                    dict["Results"].append(line)
-                            f.close()
-                            TelegramDumpFinder.__clear_cache()
-                            return dict
-                else:
+                response = await telegram_lib.find_dump(filename)
+                if response is None or len(response) == 0: 
                     print("-----------------failure_messagge: richiesta non valida: il file cercato non esiste e non può essere scaricato")
                     dict["Results"].append('failure_messagge: richiesta non valida: il file cercato non esiste e non puo\' essere scaricato') 
                     return dict
-            
+                else:
+                    date = await telegram_lib.download_file(filename)
+                    Mongo.mongo_put(filename)
+                    if date is not None:
+                        for file in os.listdir('classes_and_files/temp_dir'):
+                            if filename in file:
+                                f = open('classes_and_files/temp_dir/'+file, "r")
+                                for line in f:
+                                    if re.search(to_search, line, re.IGNORECASE):
+                                        dict["Results"].append(line)
+                                f.close()
+                                TelegramDumpFinder.__clear_cache()
+                                return dict
+                    else:
+                        print("-----------------failure_messagge: richiesta non valida: il file cercato non esiste e non può essere scaricato")
+                        dict["Results"].append('failure_messagge: richiesta non valida: il file cercato non esiste e non puo\' essere scaricato') 
+                        return dict
+
             elif Mongo.exists(filename) and not os.path.exists('classes_and_files/temp_dir'):
                 print("-----------------Debug message: dump presente su Mongo")
                 Mongo.mongo_get(filename)
@@ -91,6 +97,9 @@ class TelegramDumpFinder:
                         f.close()
                         TelegramDumpFinder.__clear_cache()
                         return dict
+            else:
+                dict["Results"].append("failure_message : Non e' stato trovato nessun riferimento al file desiderato su Telegram")
+                return 
                         
     @staticmethod     
     async def expire_data(self):
