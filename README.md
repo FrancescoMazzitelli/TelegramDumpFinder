@@ -1,16 +1,10 @@
 <p align= "center">
-<img src="https://www.unisannio.it/sites/default/files/emblema.png.pagespeed.ce.L9uvAVRynq.png" alt="Unisannio" width= 50%>
-</p>
-<p align="center">
-    Tools utilizzati nel progetto
+<img src="https://www.unisannio.it/sites/default/files/emblema.png.pagespeed.ce.L9uvAVRynq.png" alt="Unisannio" width= 30%>
 </p>
 <p align="center">
     <img src="https://img.shields.io/badge/Python-v3-blue" alt="Python">
-    <img src="https://img.shields.io/badge/Unisannio-Evoluzione%20e%20qualità%20del%20Software-blue" alt="Unisannio">
-    <img src = "https://img.shields.io/badge/gitpython-blue">
-    <img src = "https://img.shields.io/badge/git-blue">
-    <img src = "https://img.shields.io/badge/pandas-blue">
-    <img src = "https://img.shields.io/badge/ck%20tools-blue">
+    <img src="https://img.shields.io/badge/Unisannio-Telegram%20Dump%20Finder-blue" alt="Unisannio">
+</p>
 
 
 # Telegram Dump Finder - Magistrale 2022
