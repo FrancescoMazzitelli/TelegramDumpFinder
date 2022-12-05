@@ -16,7 +16,7 @@ Componenti del gruppo:
 
 ## Requisiti
 Per poter eseguire l'applicazione è necessario:
-- Eseguire il comando pip -r requirements.txt che installerà tutte le librerie necessarie al funzionamento dell'applicazione
+- Eseguire il comando pip install -r requirements.txt che installerà tutte le librerie necessarie al funzionamento dell'applicazione
 - Compilare il file settings.json:\
     { \
     &nbsp;
