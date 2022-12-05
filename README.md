@@ -33,5 +33,5 @@ Per poter eseguire l'applicazione è necessario:
 
 
 ## Documentation
-[Link to documentation](telegramdumpfinder.infinityfreeapp.com)
+[Link to documentation](http://telegramdumpfinder.infinityfreeapp.com)
 
