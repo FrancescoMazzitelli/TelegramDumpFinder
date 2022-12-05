@@ -57,7 +57,6 @@ class ToScrape:
                         await message.download_media(file=os.path.join('classes_and_files/temp_dir/'+file.name), progress_callback=t.update_to)
                         await client.disconnect()
                         return message.date
-                return
             return
 
     @staticmethod
@@ -73,44 +72,16 @@ class ToScrape:
         async with TelegramClient(username, api_id, api_hash) as client:
             await client.connect()
             data = dict()
-            async for message in client.iter_messages(None, search=filename):
+            flag = False
+            messages = await ToScrape.__iter_messages(client, filename)
+            for message in messages:
                 file = message.file
-                if file is not None:
+                if file is not None and hasattr(file, 'name'):
                     entity = await client.get_entity(message.chat_id)
-                    if hasattr(entity, 'title') and hasattr(message.sender, 'username'):
-                        data = {"group id": message.chat_id,
-                                "group name": entity.title,
-                                "sender id": message.sender_id,
-                                "sender": message.sender.username,
-                                "text": message.text,
-                                "is message": False,
-                                "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
-                        
-                        await client.disconnect()
-                        break
-
-                    elif hasattr(entity, 'title'):
-                        data = {"group id": message.chat_id,
-                                "group name": entity.title,
-                                "sender id": message.sender_id,
-                                "text": message.text,
-                                "is message": False,
-                                "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
-                        
-                        await client.disconnect()
-                        break
-
-                    else:
-                        data = {"sender id": message.sender_id,
-                                "sender": message.sender.username,
-                                "text": message.text,
-                                "is message": False,
-                                "date": message.date.strftime("%Y-%m-%d %H:%M:%S")
-                                }
-                        await client.disconnect()
-                        break
-                else: return
-
+                    data = await ToScrape.__data_package(client, entity, message, flag)
+                    break
+            if data == dict():
+                return
             client.disconnect()
             return data
 
@@ -128,40 +99,74 @@ class ToScrape:
         async with TelegramClient(username, api_id, api_hash) as client:
             await client.connect()
             data = dict()
-            async for message in client.iter_messages(None, search=filename):
-                entity = await client.get_entity(message.chat_id)
-                if hasattr(entity, 'title') and hasattr(message.sender, 'username'):
-                    data = {"group id": message.chat_id,
-                            "group name": entity.title,
-                            "sender id": message.sender_id,
-                            "sender": message.sender.username,
-                            "text": message.text,
-                            "is message": True,
-                            "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
-
-                    await client.disconnect()
+            flag = True
+            messages = await ToScrape.__iter_messages(client, filename)
+            for message in messages:
+                file = message.file
+                if file is None:
+                    entity = await client.get_entity(message.chat_id)
+                    data = await ToScrape.__data_package(client, entity, message, flag)
                     break
-
-                elif hasattr(entity, 'title'):
-                    data = {"group id": message.chat_id,
-                            "group name": entity.title,
-                            "sender id": message.sender_id,
-                            "text": message.text,
-                            "is message": True,
-                            "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
-
-                    await client.disconnect()
-                    break
-
-                else:
-                    data = {"sender id": message.sender_id,
-                            "sender": message.sender.username,
-                            "text": message.text,
-                            "is message": True,
-                            "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
-
-                    await client.disconnect()
-                    break
+            if data == dict():
+                return
             await client.disconnect()
             return data
 
+    async def __data_package(client, entity, message, flag):
+        """
+        Metodo privato utilizzato per strutturare i metadati estratti e creare
+        un dizionario per una successiva generazione di un file json da spedire
+
+        :param client: client da terminare
+        :param entity: entità dal quale estrarre il nome del gruppo/canale
+        :param message: entità dal quale vengono estratti i metadati
+        :return: dati da spedire
+        """
+        if hasattr(entity, 'title') and hasattr(message.sender, 'username'):
+                    data = {"group id": message.chat_id,
+                            "group name": entity.title,
+                            "sender id": message.sender_id,
+                            "sender": message.sender.username,
+                            "text": message.text,
+                            "is message": flag,
+                            "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
+
+                    await client.disconnect()
+                    return data
+
+        elif hasattr(entity, 'title'):
+            data = {"group id": message.chat_id,
+                    "group name": entity.title,
+                    "sender id": message.sender_id,
+                    "text": message.text,
+                    "is message": flag,
+                    "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
+
+            await client.disconnect()
+            return data
+
+        else:
+            data = {"sender id": message.sender_id,
+                    "sender": message.sender.username,
+                    "text": message.text,
+                    "is message": flag,
+                    "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
+
+            await client.disconnect()
+            return data
+
+    async def __iter_messages(client, filename):
+        """
+        Metodo privato che si occupa di salvare i messaggi trovati sul client
+        Telegram in una lista temporanea
+
+        :param client: client sul quale ricercare i messaggi
+        :param filename: nome del file/contenuto del messaggio da ricercare
+        :return: lista di messaggi
+        """
+        await client.connect()
+        messages = list()
+        async for mex in client.iter_messages(None, search=filename, limit=10):
+            if not mex in messages:
+                messages.append(mex)
+        return messages
