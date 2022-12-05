@@ -23,15 +23,14 @@ Componenti del gruppo:
 ## Requisiti
 Per poter eseguire l'applicazione è necessario:
 - Eseguire il comando pip -r requirements.txt che installerà tutte le librerie necessarie al funzionamento dell'applicazione
-- Eseguire come amministratore l'eseguibile "GIT bash" e inserire il seguente comando: git config --system core.logpaths true 
-- Inserire l'url relativo alla repository da analizzare nel file settings.json:\
+- Compilare il file settings.json:\
     { \
-        "api_id": "123456789", \
-        "api_hash": "abcdefghijklmnopqrstuvwxyz123456789", \ 
-        "username": "your_username", \
-        "phone": "+00 123456789", \
-        "connection_string": "mongodb://localhost:27017" \
-    } \
+       * "api_id": "123456789", \
+       * "api_hash": "abcdefghijklmnopqrstuvwxyz123456789", \ 
+       * "username": "your_username", \
+       * "phone": "+00 123456789", \
+       * "connection_string": "mongodb://localhost:27017" \
+    }
 
 
 ## Documentation
