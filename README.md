@@ -33,5 +33,5 @@ Per poter eseguire l'applicazione è necessario:
 
 
 ## Documentation
-[Clicca qui per leggere la documentazione](https://htmlpreview.github.io/?https://github.com/FrancescoMazzitelli/TelegramDumpFinder/blob/main/html/TelegramDumpFinder/index.html)
+[Clicca qui per leggere la documentazione](telegramdumpfinder.infinityfreeapp.com)
 
