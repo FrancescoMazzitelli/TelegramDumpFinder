@@ -35,4 +35,5 @@ Per poter eseguire l'applicazione è necessario:
 
 
 ## Documentation
-https://htmlpreview.github.io/?https://github.com/FrancescoMazzitelli/TelegramDumpFinder/blob/main/html/TelegramDumpFinder/index.html
+[![Clicca qui per leggere la documentazione]([https://example.com/immagine.jpg](https://htmlpreview.github.io/?https://github.com/FrancescoMazzitelli/TelegramDumpFinder/blob/main/html/TelegramDumpFinder/index.html))]
+
