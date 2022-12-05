@@ -25,11 +25,15 @@ Per poter eseguire l'applicazione è necessario:
 - Eseguire il comando pip -r requirements.txt che installerà tutte le librerie necessarie al funzionamento dell'applicazione
 - Compilare il file settings.json:\
     { \
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;
         "api_id": "123456789", \
+    &nbsp;
         "api_hash": "abcdefghijklmnopqrstuvwxyz123456789", \
+    &nbsp;
         "username": "your_username", \
+    &nbsp;
         "phone": "+00 123456789", \
+    &nbsp;
         "connection_string": "mongodb://localhost:27017" \
     }
 
