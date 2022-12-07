@@ -24,7 +24,9 @@ class TelegramDumpFinder:
                 print("-----------------Debug message: dump non trovato, ricerca riferimenti in corso")
                 to_sendM = await telegram_lib.message_reader(filename)
                 if to_sendM is None or len(to_sendM) == 0:
-                    return {"failure_message":"Non e' stato trovato nessun riferimento al file desiderato su Telegram"}
+                    return {"failure_message":"Non e' stato trovato nessun riferimento al file desiderato su Telegram",
+                            "exist":False
+                            }
                 else: return to_sendM
             else: return to_send  
 

@@ -129,7 +129,9 @@ class ToScrape:
                             "sender": message.sender.username,
                             "text": message.text,
                             "is message": flag,
-                            "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
+                            "date": message.date.strftime("%Y-%m-%d %H:%M:%S"),
+                            "exist": True
+                            }
 
                     await client.disconnect()
                     return data
@@ -140,7 +142,9 @@ class ToScrape:
                     "sender id": message.sender_id,
                     "text": message.text,
                     "is message": flag,
-                    "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
+                    "date": message.date.strftime("%Y-%m-%d %H:%M:%S"),
+                    "exist": True
+                    }
 
             await client.disconnect()
             return data
@@ -150,7 +154,9 @@ class ToScrape:
                     "sender": message.sender.username,
                     "text": message.text,
                     "is message": flag,
-                    "date": message.date.strftime("%Y-%m-%d %H:%M:%S")}
+                    "date": message.date.strftime("%Y-%m-%d %H:%M:%S"),
+                    "exist": True
+                    }
 
             await client.disconnect()
             return data
