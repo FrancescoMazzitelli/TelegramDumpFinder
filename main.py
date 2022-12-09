@@ -5,7 +5,7 @@ from classes_and_files.mongo_class import Mongo
 
 flask_app = Flask(__name__)
 
-@flask_app.route("/breaches/<filename>/present", endpoint='find_dump')
+@flask_app.route("/unisannio/DWM/telegram/breaches/<filename>/present", endpoint='find_dump')
 async def find_dump(filename):
 
     """
@@ -19,7 +19,7 @@ async def find_dump(filename):
     result = await TelegramDumpFinder.find_dump(filename)
     return jsonify(result)
 
-@flask_app.route("/breaches/<filename>/<string_to_find>", endpoint='download_dump')
+@flask_app.route("/unisannio/DWM/telegram/breaches/<filename>/<string_to_find>", endpoint='download_dump')
 async def download_dump(filename, string_to_find):
 
     """
@@ -38,7 +38,7 @@ async def download_dump(filename, string_to_find):
 
 if __name__ == '__main__':
 
-    addr = '127.0.0.1', 5000
+    addr = '0.0.0.0', 5000
     server = wsgi.Server(addr, flask_app)
     try:
         server.start()
