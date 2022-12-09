@@ -47,7 +47,7 @@ class TelegramDumpFinder:
         :return: Dict che verrà poi spedito tramite HTTP
         """
 
-        dict = {"Results": []}
+        dict = {"results": []}
         if filename is not None:
             if os.path.exists('classes_and_files/temp_dir'):
                 print("-----------------Debug message: dump presente sul filesystem")
